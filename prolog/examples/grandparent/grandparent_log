@@ -1,0 +1,189 @@
+(base) zhangliao@zhangliao-Lenovo-XiaoXinPro-13IML-2020:~/aleph/prolog/examples$ swipl
+Welcome to SWI-Prolog (threaded, 64 bits, version 9.0.4)
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
+Please run ?- license. for legal details.
+
+For online help and background, visit https://www.swi-prolog.org
+For built-in help, use ?- help(Topic). or ?- apropos(Word).
+
+?- [grandparent].
+true.
+
+?- induce.
+[select example] [1]
+[sat] [1]
+[grandparent(dad(dad(bob)),bob)]
+
+[bottom clause]
+grandparent(A,B) :-
+   father(A,C), father(C,B).
+[literals] [3]
+[saturation time] [0.0007835119999999307]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+grandparent(A,B).
+[16/768]
+grandparent(A,B) :-
+   father(A,C).
+[8/328]
+grandparent(A,B) :-
+   father(A,C), father(C,B).
+[4/0]
+[-------------------------------------]
+[found clause]
+grandparent(A,B) :-
+   father(A,C), father(C,B).
+[pos cover = 4 neg cover = 0] [pos-neg] [4]
+[clause label] [[4,0,3,4]]
+[clauses constructed] [3]
+[-------------------------------------]
+[clauses constructed] [3]
+[search time] [0.011159881999999954]
+[best clause]
+grandparent(A,B) :-
+   father(A,C), father(C,B).
+[pos cover = 4 neg cover = 0] [pos-neg] [4]
+[atoms left] [12]
+[positive examples left] [12]
+[estimated time to finish (secs)] [0.03347964599999986]
+[select example] [2]
+[sat] [2]
+[grandparent(dad(mum(bob)),bob)]
+
+[bottom clause]
+grandparent(A,B) :-
+   father(A,C), mother(C,B).
+[literals] [3]
+[saturation time] [0.0009683670000000255]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+grandparent(A,B).
+[12/768]
+grandparent(A,B) :-
+   father(A,C).
+[4/328]
+grandparent(A,B) :-
+   father(A,C), mother(C,B).
+[4/0]
+[-------------------------------------]
+[found clause]
+grandparent(A,B) :-
+   father(A,C), mother(C,B).
+[pos cover = 4 neg cover = 0] [pos-neg] [4]
+[clause label] [[4,0,3,4]]
+[clauses constructed] [3]
+[-------------------------------------]
+[clauses constructed] [3]
+[search time] [0.009849816000000011]
+[best clause]
+grandparent(A,B) :-
+   father(A,C), mother(C,B).
+[pos cover = 4 neg cover = 0] [pos-neg] [4]
+[atoms left] [8]
+[positive examples left] [8]
+[estimated time to finish (secs)] [0.021009697999999966]
+[select example] [3]
+[sat] [3]
+[grandparent(mum(dad(bob)),bob)]
+
+[bottom clause]
+grandparent(A,B) :-
+   mother(A,C), father(C,B).
+[literals] [3]
+[saturation time] [0.0009569549999999261]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+grandparent(A,B).
+[8/768]
+grandparent(A,B) :-
+   mother(A,C).
+[8/328]
+grandparent(A,B) :-
+   mother(A,C), father(C,B).
+[4/0]
+[-------------------------------------]
+[found clause]
+grandparent(A,B) :-
+   mother(A,C), father(C,B).
+[pos cover = 4 neg cover = 0] [pos-neg] [4]
+[clause label] [[4,0,3,4]]
+[clauses constructed] [3]
+[-------------------------------------]
+[clauses constructed] [3]
+[search time] [0.010103262000000002]
+[best clause]
+grandparent(A,B) :-
+   mother(A,C), father(C,B).
+[pos cover = 4 neg cover = 0] [pos-neg] [4]
+[atoms left] [4]
+[positive examples left] [4]
+[estimated time to finish (secs)] [0.010370986666666656]
+[select example] [4]
+[sat] [4]
+[grandparent(mum(mum(bob)),bob)]
+
+[bottom clause]
+grandparent(A,B) :-
+   mother(A,C), mother(C,B).
+[literals] [3]
+[saturation time] [0.0008221800000000057]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+grandparent(A,B).
+[4/768]
+grandparent(A,B) :-
+   mother(A,C).
+[4/328]
+grandparent(A,B) :-
+   mother(A,C), mother(C,B).
+[4/0]
+[-------------------------------------]
+[found clause]
+grandparent(A,B) :-
+   mother(A,C), mother(C,B).
+[pos cover = 4 neg cover = 0] [pos-neg] [4]
+[clause label] [[4,0,3,4]]
+[clauses constructed] [3]
+[-------------------------------------]
+[clauses constructed] [3]
+[search time] [0.009678900000000046]
+[best clause]
+grandparent(A,B) :-
+   mother(A,C), mother(C,B).
+[pos cover = 4 neg cover = 0] [pos-neg] [4]
+[atoms left] [0]
+[positive examples left] [0]
+[estimated time to finish (secs)] [0.0]
+
+[theory]
+
+[Rule 1] [Pos cover = 4 Neg cover = 0]
+grandparent(A,B) :-
+   father(A,C), father(C,B).
+
+[Rule 2] [Pos cover = 4 Neg cover = 0]
+grandparent(A,B) :-
+   father(A,C), mother(C,B).
+
+[Rule 3] [Pos cover = 4 Neg cover = 0]
+grandparent(A,B) :-
+   mother(A,C), father(C,B).
+
+[Rule 4] [Pos cover = 4 Neg cover = 0]
+grandparent(A,B) :-
+   mother(A,C), mother(C,B).
+
+[Training set performance]
+           Actual
+        +          -  
+     +  16          0          16  
+Pred 
+     -  0         768        768 
+
+        16         768        784 
+
+Accuracy = 1
+[Training set summary] [[16,0,0,768]]
+[time taken] [0.050820671000000095]
+[total clauses constructed] [12]
+true.
