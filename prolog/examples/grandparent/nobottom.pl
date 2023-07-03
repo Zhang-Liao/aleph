@@ -5,22 +5,24 @@ To run do 'induce'
 ?- induce(Program).
 */
 :- use_module(library(aleph)).
+:- use_module(library(dialect/xsb/setof)).
+
 :- if(current_predicate(use_rendering/1)).
 :- use_rendering(prolog).
 :- endif.
 :- aleph.
 :- aleph_set(construct_bottom, false).
 :- aleph_set(refine, user).
-:- modeh(*,grandparent(+person,-person)).
-:- modeh(*,parent(+person,-person)).
+% :- modeh(*,grandparent(+person,-person)).
+% :- modeh(*,parent(+person,-person)).
 
-:- modeb(*,mother(+person,-person)).
-:- modeb(*,father(+person,-person)).
-:- modeb(*,parent(+person,-person)).
+% :- modeb(*,mother(+person,-person)).
+% :- modeb(*,father(+person,-person)).
+% :- modeb(*,parent(+person,-person)).
 
-:- determination(grandparent/2,father/2).
-:- determination(grandparent/2,parent/2).
-:- determination(grandparent/2,mother/2).
+% :- determination(grandparent/2,father/2).
+% :- determination(grandparent/2,parent/2).
+% :- determination(grandparent/2,mother/2).
 
 :-dynamic grandparent/2.
 :-begin_bg.
@@ -66,21 +68,81 @@ mother(mum(X),X):-
 %     excess_vars(Clause1, [], [], VVars),
 %     VVars =.. [_|Vars],
 %     member(V, Vars),
+input_vars_aux([], []).
+
+input_vars_aux([H|Tl], Vars) :-
+    H == true, !,
+    input_vars_aux(Tl, Vars).
+
+input_vars_aux([H|Tl], [V|Vars]) :-
+    H = grandparent(V, _), !,
+    input_vars_aux(Tl, Vars).
+
+input_vars_aux([H|Tl], [V|Vars]) :-
+    H = father(V, _), !,
+    input_vars_aux(Tl, Vars).
+input_vars_aux([H|Tl], [V|Vars]) :-
+    H = mother(V, _), !,
+    input_vars_aux(Tl, Vars).
+
+input_vars(List, Vars):-
+    input_vars_aux(List, VarsDup),
+    term_variables(VarsDup, Vars).
+
+output_vars_aux([], []).
+
+output_vars_aux([H|Tl], Vars) :-
+    H = true, !,
+    output_vars_aux(Tl, Vars).
+
+output_vars_aux([H|Tl], [V|Vars]) :-
+    H = grandparent(_, V), !,
+    output_vars_aux(Tl, Vars).
+
+output_vars_aux([H|Tl], [V|Vars]) :-
+    H = father(_, V), !,
+    output_vars_aux(Tl, Vars).
+output_vars_aux([H|Tl], [V|Vars]) :-
+    H = mother(_, V), !,
+    output_vars_aux(Tl, Vars).
+
+output_vars(List, Vars):-
+    output_vars_aux(List, VarsDup),
+    term_variables(VarsDup, Vars).
+
 refine(aleph_false, (grandparent(_, _) :- true)).
+    % print('grandparent'), nl.
 
-refine(Clause1, Clause2):-
-    Clause1 = (grandparent(X, Y):- Body1),
-    length(Vars, 2),
-    P =.. [mother| Vars],
-    comma_list(Body2, [P, Body1]),
-    Clause2 = (grandparent(X, Y):- Body2).
+% refine(grandparent(X, Y), (mother())) :-
+%     print('grandparent'), nl.
 
-refine(Clause1, Clause2):-
-    Clause1 = (grandparent(X, Y):- Body1),
-    length(Vars, 2),
-    P =.. [father| Vars],
-    comma_list(Body2, [P, Body1]),
-    Clause2 = (grandparent(X, Y):- Body2).
+refine(grandparent(X, Y) :- Body1, Clause):-
+    % print('mother'), nl,
+    comma_list(Body1, Atoms),
+    % print(atoms(Atoms)), nl,
+    % input_vars(Atoms, BodyInputVars),
+    % print(bodyInputVars(BodyInputVars)), nl,
+    output_vars(Atoms, BodyOutputVars),
+    member(Input, [X|BodyOutputVars]),
+    % print(bodyOutputVars(BodyOutputVars)), nl,
+    member(Output, [Y,Z]),
+    P =.. [mother, Input, Output],
+    % print(P), nl,
+    comma_list(Body2, [P| Atoms]),
+    Clause = (grandparent(X, Y):- Body2).
+    % print('add mother'), nl,
+    % print(Clause), nl, nl.
+
+refine(grandparent(X, Y) :- Body1, Clause):-
+    % print('father'), nl,
+    comma_list(Body1, Atoms),
+    output_vars(Atoms, BodyOutputVars),
+    % input_vars(Atoms, BodyInputVars),
+    member(Input, [X|BodyOutputVars]),
+    member(Output, [Y,Z]),
+    P =.. [father, Input, Output],
+    comma_list(Body2, [P| Atoms]),
+    Clause = (grandparent(X, Y):- Body2).
 
 :-end_bg.
 :-begin_in_pos.
