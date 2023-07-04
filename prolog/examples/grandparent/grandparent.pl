@@ -9,14 +9,10 @@ To run do 'induce'
 :- use_rendering(prolog).
 :- endif.
 :- aleph.
-% :- aleph_set(construct_bottom, false).
-% :- aleph_set(refine, user).
 :- modeh(*,grandparent(+person,-person)).
-:- modeh(*,parent(+person,-person)).
 
 :- modeb(*,mother(+person,-person)).
 :- modeb(*,father(+person,-person)).
-:- modeb(*,parent(+person,-person)).
 
 :- determination(grandparent/2,father/2).
 :- determination(grandparent/2,parent/2).
@@ -60,27 +56,6 @@ father(dad(X),X):-
    person(X).
 mother(mum(X),X):-
    person(X).
-
-% refine(eastbound(X),(eastbound(X):-has_car(X,_))).
-% refine(eastbound(X),(eastbound(X):-has_car(X,Y),short(Y))).
-%     excess_vars(Clause1, [], [], VVars),
-%     VVars =.. [_|Vars],
-%     member(V, Vars),
-refine(aleph_false, (grandparent(_, _) :- true)).
-
-refine(Clause1, Clause2):-
-    Clause1 = (grandparent(X, Y):- Body1),
-    length(Vars, 2),
-    P =.. [mother| Vars],
-    comma_list(Body2, [P, Body1]),
-    Clause2 = (grandparent(X, Y):- Body2).
-
-refine(Clause1, Clause2):-
-    Clause1 = (grandparent(X, Y):- Body1),
-    length(Vars, 2),
-    P =.. [father| Vars],
-    comma_list(Body2, [P, Body1]),
-    Clause2 = (grandparent(X, Y):- Body2).
 
 :-end_bg.
 :-begin_in_pos.
