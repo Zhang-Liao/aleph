@@ -63,11 +63,6 @@ father(dad(X),X):-
 mother(mum(X),X):-
    person(X).
 
-% refine(eastbound(X),(eastbound(X):-has_car(X,_))).
-% refine(eastbound(X),(eastbound(X):-has_car(X,Y),short(Y))).
-%     excess_vars(Clause1, [], [], VVars),
-%     VVars =.. [_|Vars],
-%     member(V, Vars),
 input_vars_aux([], []).
 
 input_vars_aux([H|Tl], Vars) :-
@@ -110,6 +105,10 @@ output_vars(List, Vars):-
     output_vars_aux(List, VarsDup),
     term_variables(VarsDup, Vars).
 
+body_pred(mother).
+body_pred(father).
+
+
 refine(aleph_false, (grandparent(_, _) :- true)).
     % print('grandparent'), nl.
 
@@ -126,23 +125,24 @@ refine(grandparent(X, Y) :- Body1, Clause):-
     member(Input, [X|BodyOutputVars]),
     % print(bodyOutputVars(BodyOutputVars)), nl,
     member(Output, [Y,Z]),
-    P =.. [mother, Input, Output],
+    body_pred(P),
+    NewAtom =.. [P, Input, Output],
     % print(P), nl,
-    comma_list(Body2, [P| Atoms]),
+    comma_list(Body2, [NewAtom| Atoms]),
     Clause = (grandparent(X, Y):- Body2).
     % print('add mother'), nl,
     % print(Clause), nl, nl.
 
-refine(grandparent(X, Y) :- Body1, Clause):-
+% refine(grandparent(X, Y) :- Body1, Clause):-
     % print('father'), nl,
-    comma_list(Body1, Atoms),
-    output_vars(Atoms, BodyOutputVars),
+    % comma_list(Body1, Atoms),
+    % output_vars(Atoms, BodyOutputVars),
     % input_vars(Atoms, BodyInputVars),
-    member(Input, [X|BodyOutputVars]),
-    member(Output, [Y,Z]),
-    P =.. [father, Input, Output],
-    comma_list(Body2, [P| Atoms]),
-    Clause = (grandparent(X, Y):- Body2).
+    % member(Input, [X|BodyOutputVars]),
+    % member(Output, [Y,Z]),
+    % P =.. [father, Input, Output],
+    % comma_list(Body2, [P| Atoms]),
+    % Clause = (grandparent(X, Y):- Body2).
 
 :-end_bg.
 :-begin_in_pos.
