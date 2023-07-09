@@ -77,10 +77,8 @@ input_vars_aux([H|Tl], [V|Vars]) :-
     input_vars_aux(Tl, Vars).
 
 input_vars_aux([H|Tl], [V|Vars]) :-
-    H = father(V, _), !,
-    input_vars_aux(Tl, Vars).
-input_vars_aux([H|Tl], [V|Vars]) :-
-    H = mother(V, _), !,
+    body_pred(P),
+    H =.. [P, _, V], !,
     input_vars_aux(Tl, Vars).
 
 input_vars(List, Vars):-
@@ -98,10 +96,8 @@ output_vars_aux([H|Tl], [V|Vars]) :-
     output_vars_aux(Tl, Vars).
 
 output_vars_aux([H|Tl], [V|Vars]) :-
-    H = father(_, V), !,
-    output_vars_aux(Tl, Vars).
-output_vars_aux([H|Tl], [V|Vars]) :-
-    H = mother(_, V), !,
+    body_pred(P),
+    H =.. [P, _, V], !,
     output_vars_aux(Tl, Vars).
 
 output_vars(List, Vars):-
