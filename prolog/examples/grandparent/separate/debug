@@ -1,0 +1,10 @@
+[bk, neg, pos] fine
+[bk] [neg] [pos] not
+
+consult in the same file not work?
+
+:- [bk, neg, pos]. in terminal does not work
+
+order matter ?
+?- [refine, bk, neg, pos]. work
+?- [bk, neg, pos, refine]. does not
