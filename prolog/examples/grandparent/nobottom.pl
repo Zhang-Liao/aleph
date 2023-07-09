@@ -54,7 +54,6 @@ mother(mum(X),X):-
    person(X).
 :-end_bg.
 
-:-begin_bg.
 syn_member(X, [Y | _]) :- X == Y.
 syn_member(X, [_ | Tl]) :- syn_member(X, Tl).
 
@@ -99,6 +98,7 @@ output_vars(List, Vars):-
 body_pred(mother).
 body_pred(father).
 
+:-begin_bg.
 
 refine(aleph_false, (grandparent(_, _) :- true)).
     % print('grandparent'), nl.
