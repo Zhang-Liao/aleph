@@ -31,7 +31,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 :- module(aleph,
-	  [ 
+	  [
 		induce/1,
 		induce_tree/1,
 		induce_max/1,
@@ -83,10 +83,10 @@
 
 /** <module> aleph
 
-# A Learning Engine for Proposing Hypotheses - ALEPH 
+# A Learning Engine for Proposing Hypotheses - ALEPH
 ## Version 5
 
-Aleph is an Inductive Logic Programming system developed by 
+Aleph is an Inductive Logic Programming system developed by
 [Ashwin Srinivasan](https://www.bits-pilani.ac.in/goa/ashwin/profile):
 
 http://www.cs.ox.ac.uk/activities/machlearn/Aleph/
@@ -102,7 +102,7 @@ please contact Ashwin Srinivasan first.                                 %
 @author Ashwin Srinivasan, Fabrizio Riguzzi and Paolo Niccolò Giubelli.
 @copyright Ashwin Srinivasan
 */
-:- use_module(library(arithmetic)). 
+:- use_module(library(arithmetic)).
 :-use_module(library(broadcast)).
 :-use_module(library(time)).
 :- arithmetic_function(inf/0).
@@ -230,7 +230,7 @@ system:term_expansion((:- begin_bg), []) :-
 
 system:term_expansion(C, C) :-
   C\= (:- end_bg),
-  prolog_load_context(module, M),	
+  prolog_load_context(module, M),
   aleph_input_mod(M),
   M:bg_on,!.
 
@@ -253,9 +253,9 @@ system:term_expansion((:- begin_in_pos), []) :-
   assert(M:pos_on),
   clean_up_examples(pos,M),
 	asserta(M:'$aleph_global'(size,size(pos,0))).
-	
 
-system:term_expansion(C, []) :-	
+
+system:term_expansion(C, []) :-
   C\= (:- end_in_pos),
   prolog_load_context(module, M),
   aleph_input_mod(M),
@@ -269,7 +269,7 @@ system:term_expansion((:- end_in_pos), []) :-
   %retractall(M:incpos(_)),
 %  (M:in(IN0)->
 %    retract(M:in(IN0)),%
-%	
+%
 %    append(IN0,L,IN),
 %    assert(M:in(IN))
 %  ;
@@ -325,7 +325,7 @@ system:term_expansion((:- end_in_neg), []) :-
 %
 %  (M:in(IN0)->
 %    retract(M:in(IN0)),
-	
+
 %    append(IN0,L,IN),
 %    assert(M:in(IN))
 %  ;
@@ -339,13 +339,13 @@ system:term_expansion(end_of_file, end_of_file) :-
   prolog_load_context(module, M),
   aleph_input_mod(M),!,
   retractall(pita_input_mod(M)),
-  	aleph:record_targetpred(M), 	
+  	aleph:record_targetpred(M),
 	aleph:check_recursive_calls(M),
 	aleph:check_prune_defs(M),
 	aleph:check_user_search(M),
 	aleph:check_posonly(M),
 	aleph:check_auto_refine(M),
-	aleph:check_abducibles(M),	
+	aleph:check_abducibles(M),
 	%Aggiunti alla fine
 	aleph:reset_counts(M),
 	asserta(M:'$aleph_global'(last_clause,last_clause(0))),
@@ -381,7 +381,7 @@ assert_all([H|T],[HRef|TRef]):-
 print_arr([]).
 print_arr([H|T]):-
 	write(H),print_arr(T),nl.
-	
+
 
 
 /*
@@ -431,12 +431,12 @@ init(swi,M):-
 	(predicate_property(numbervars(_,_,_),built_in) -> true;
 		assert((numbervars(A,B,C):- numbervars(A,'$VAR',B,C)))),
 	assert((system(X):- shell(X))),
-	assert((exists(X):- exists_file(X))), 
+	assert((exists(X):- exists_file(X))),
 	assert((aleph_reconsult(F):- consult(F))),
 	%assert((aleph_random(X):- I = 1000000, X is float(random(I-1))/float(I))),
         (predicate_property(thread_local(_),built_in) -> true;
 		assert(thread_local(_))),
-	
+
 	(predicate_property(delete_file(_),built_in) -> true;
 		assert(delete_file(_))).
 
@@ -563,7 +563,7 @@ flatten_atoms(_,_,_,Last,M):-
 %	update lits database by adding ``flattened atoms''. This involves:
 %	replacing ground terms at +/- positions in Lit with variables
 %	and wrapping # positions in Lit within a special term stucture
-%	Mode contains actual mode and term-place numbers and types for +/-/# 
+%	Mode contains actual mode and term-place numbers and types for +/-/#
 %	Last is the last literal number in the lits database at present
 %	Last1 is the last literal number after the update
 flatten_atom(Depth,Depth1,Lit,Negated,Mode,Last,Last1,M):-
@@ -586,7 +586,7 @@ flatten_lits(Lit,CheckOArgs,Depth,Negated,Mode,Last,_,M):-
 	functor(FAtom,Name,Arity),
 	apply_equivs(Depth1,Arity,OldFAtom,FAtom,M),
 	retract(M:'$aleph_local'(flatten_lits,OldLast)),
-	(CheckOArgs = true -> 
+	(CheckOArgs = true ->
 		arg(3,Mode,Out),
 		get_vars(FAtom,Out,OVars),
 		(in_path(OVars,M) ->
@@ -601,7 +601,7 @@ flatten_lits(_,_,_,_,_,_,Last1,M):-
 
 % flatten_lit(+Lit,+Mode,+FAtom,-IVars,-OVars)
 % variabilise Lit as FAtom
-%	Mode contains actual mode and 
+%	Mode contains actual mode and
 %	In, Out, Const positions as term-place numbers with types
 % 	replace ground terms with integers denoting variables
 %	or special terms denoting constants
@@ -715,7 +715,7 @@ add_new_lit(Depth,FAtom,Mode,OldLast,Negated,NewLast,M):-
 % of bottom clause, and update input and output terms in literal
 add_lit(Last,Negated,FAtom,I,O,_,_,Last,M):-
 	setting(construct_bottom,CBot,M),
-	(CBot = false ; CBot = reduction), 
+	(CBot = false ; CBot = reduction),
 	(Negated = true -> Lit = not(FAtom); Lit = FAtom),
 	M:'$aleph_sat_litinfo'(_,0,Lit,I,O,_), !.
 add_lit(Last,Negated,FAtom,In,Out,IVars,OVars,LitNum,M):-
@@ -735,7 +735,7 @@ update_lit(LitNum,false,FAtom,I,O,D,M):-
 	M:'$aleph_sat_litinfo'(LitNum,0,FAtom,I,O,D), !.
 update_lit(LitNum,Negated,FAtom,I,O,D,M):-
 	gen_nlitnum(LitNum,M),
-	add_litinfo(LitNum,Negated,FAtom,I,O,D,M), 
+	add_litinfo(LitNum,Negated,FAtom,I,O,D,M),
 	get_vars(FAtom,I,IVars),
 	get_vars(FAtom,O,OVars),
 	assertz(M:'$aleph_sat_ivars'(LitNum,K,IVars)),
@@ -747,7 +747,7 @@ add_litinfo(LitNum,true,FAtom,I,O,D,M):-
 	assertz(M:'$aleph_sat_litinfo'(LitNum,0,not(FAtom),I,O,D)).
 add_litinfo(LitNum,_,FAtom,I,O,D,M):-
 	assertz(M:'$aleph_sat_litinfo'(LitNum,0,FAtom,I,O,D)).
-	
+
 % update database with input terms of literal
 update_iterms(_,[],_M).
 update_iterms(LitNum,[VarNum|Vars],M):-
@@ -785,13 +785,13 @@ update_generators(M):-
 	asserta(M:'$aleph_sat_litinfo'(1,Depth,Lit,I,O,D1)).
 update_generators(_M).
 
-% mark literals 
+% mark literals
 mark_lits(Lits,M):-
 	aleph_member(Lit,Lits),
 	asserta(M:'$aleph_local'(marked,Lit/0)),
 	fail.
 mark_lits(_,_M).
-	
+
 % recursively mark literals with minimum depth to bind output vars in head
 mark_lits([],_,_,_M).
 mark_lits(Lits,OldVars,Depth,M):-
@@ -843,7 +843,7 @@ mark_floating_lits(Lit,Last,M):-
 mark_floating_lits(Lit,Last,M):-
 	Lit1 is Lit + 1,
 	mark_floating_lits(Lit1,Last,M).
-	
+
 % mark lits in bottom clause that are specified redundant by user
 % requires definition of redundant/2 that have distinguished first arg ``bottom''
 mark_redundant_lits(Lit,Last,_M):-
@@ -940,10 +940,10 @@ insert_lastlit(LastLit,Lits,Lits1,M):-
 	aleph_delete_list(Prefix,Lits,Suffix),
 	aleph_append([LastLit|Suffix],Prefix,Lits1).
 
-	
+
 find_last_ancestor([],_,Last,_,Last,_M):- !.
 find_last_ancestor([Lit|Lits],L,_,LitNum,Last,M):-
-	M:'$aleph_sat_litinfo'(Lit,_,_,_,_,D), 
+	M:'$aleph_sat_litinfo'(Lit,_,_,_,_,D),
 	aleph_member1(L,D), !,
 	NextLit is LitNum + 1,
 	find_last_ancestor(Lits,L,LitNum,NextLit,Last,M).
@@ -966,7 +966,7 @@ rm_moderepeats(Last,N,M):-
 	p1_message('repeated literals'), p_message(N/Last),
 	remove_lits(Lits,M).
 rm_moderepeats(_,0,_M).
-	
+
 % removal of symmetric literals
 rm_symmetric(_,_,M):-
 	M:'$aleph_global'(symmetric,_),
@@ -1007,7 +1007,7 @@ symmetric_match([aleph_const(Term)|Terms1],[aleph_const(Term)|Terms2]):-
 symmetric_match([Term1|Terms1],[Term2|Terms2]):-
 	integer(Term1), integer(Term2),
 	symmetric_match(Terms1,Terms2).
-	
+
 % removal of literals that are repeated because of commutativity
 rm_commutative(_,_,M):-
 	M:'$aleph_global'(commutative,commutative(Name/Arity)),
@@ -1094,7 +1094,7 @@ get_marked(Lit,Last,Lits,M):-
 
 % update descendent lists of literals by removing useless literals
 remove_lits(L,M):-
-	retract(M:'$aleph_sat_litinfo'(Lit,Depth,A,I,O,D)), 
+	retract(M:'$aleph_sat_litinfo'(Lit,Depth,A,I,O,D)),
 	aleph_delete_list(L,D,D1),
 	asserta(M:'$aleph_sat_litinfo'(Lit,Depth,A,I,O,D1)),
 	fail.
@@ -1126,10 +1126,10 @@ gen_layer(Name/Arity,Depth,M):-
 gen_layer(_,_,_M).
 
 get_successes(Literal,1,Mo,M):-
-	depth_bound_call(Literal,M), 
+	depth_bound_call(Literal,M),
 	update_atoms(Literal,Mo,M), !.
 get_successes(Literal,*,Mo,M):-
-	depth_bound_call(Literal,M), 
+	depth_bound_call(Literal,M),
 	update_atoms(Literal,Mo,M).
 get_successes(Literal,N,Mo,M):-
 	integer(N),
@@ -1139,7 +1139,7 @@ get_successes(Literal,N,Mo,M):-
 
 % get at most N matches for a literal
 get_nsuccesses(Literal,N,Mo,M):-
-	depth_bound_call(Literal,M), 
+	depth_bound_call(Literal,M),
 	retract(M:'$aleph_local'(last_success,Succ0)),
 	Succ0 < N,
 	Succ1 is Succ0 + 1,
@@ -1190,6 +1190,7 @@ legal_term(exact,Depth,Type,Term,M):-
 	% M:'$aleph_sat_terms'(TNo,_,Term,Type),_).
 legal_term(upper,Depth,Type,Term,M):-
 	M:'$aleph_sat_terms'(TNo,Depth1,Term,Type),
+	print(legal_term(upper,Depth,Type,Term,M)), nl,
 	Depth1 \= unknown,
 	Depth1 < Depth,
 	once(M:'$aleph_sat_vars'(_,TNo,_,[_|_])).
@@ -1221,7 +1222,7 @@ split_vars(_,FAtom,I,O,_,FAtom,IVars,OVars,[],_M):-
 	get_vars(FAtom,I,IVars),
 	get_vars(FAtom,O,OVars).
 
-% get equivalent classes of variables from co-references 
+% get equivalent classes of variables from co-references
 get_var_equivs(Depth,IVarList,OVarList,IVars,OVars,Equivs):-
 	sort(IVarList,IVars),
 	sort(OVarList,OVars),
@@ -1278,11 +1279,11 @@ add_eqs([V1|Rest],Depth,Type,Last,NewLast,M):-
 
 add_eqs([],_,_,_,L,L,_M).
 add_eqs([Var2|Rest],Depth,Var1,Type,Last,NewLast,M):-
-	(Depth = 0 -> 
+	(Depth = 0 ->
 		add_lit(Last,false,(Var1=Var2),[1/Type],[2/Type],[Var1],[Var2],Last1,M);
 		add_lit(Last,false,(Var1=Var2),[1/Type,2/Type],[],[Var1,Var2],[],Last1),M),
 	add_eqs(Rest,Depth,Var1,Type,Last1,NewLast,M).
-	
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1395,7 +1396,7 @@ get_modes(PSym/Arity,L,M):-
 search(S,Nodes,M):-
 	arg(36,S,Time),
 	Inf is inf,
-	Time =\= Inf, 
+	Time =\= Inf,
 	SearchTime is integer(Time),
 	SearchTime > 0, !,
 	catch(time_bound_call(SearchTime,searchlimit,graphsearch(S,_),M),
@@ -1534,7 +1535,7 @@ get_search_settings(S,M):-
 %	. best hypothesis covers all positive examples
 discontinue_search(S,[P,_,_,F|_]/_,_,_M):-
 	arg(39,S,RlsType),
-	RlsType = rrr, 
+	RlsType = rrr,
 	arg(13,S,MinPos),
 	P >= MinPos,
 	arg(19,S,MinScore),
@@ -1601,7 +1602,7 @@ get_sample_cover(S,PosCover,NegCover,M):-
                 arg(16,S,PSize),
                 PCover = [1-PSize]),
         arg(4,S,_/Evalfn),
-	(Evalfn = posonly -> 
+	(Evalfn = posonly ->
                 M:'$aleph_global'(atoms_left,atoms_left(rand,NCover));
                 arg(24,S,NSize),
                 NCover = [1-NSize]),
@@ -2084,7 +2085,7 @@ refinement_ok(_,_,_M).
 split_ok(false,_,_):- !.
 split_ok(_,Clause,Lit):-
 	functor(Lit,Name,_),
-	Name \= '=', 
+	Name \= '=',
 	copy_term(Clause/Lit,Clause1/Lit1),
 	lit_redun(Lit1,Clause1), !,
 	p_message('redundant literal'), nl,
@@ -2107,16 +2108,16 @@ execute_equality(Lit):-
 	functor(Lit,'=',2), !,
 	Lit.
 execute_equality(_).
-	
+
 theory_lang_ok([],_).
 theory_lang_ok([_-[_,_,_,Clause]|T],Lang):-
         lang_ok(Lang,Clause),
-        theory_lang_ok(Lang,T). 
+        theory_lang_ok(Lang,T).
 
 theory_newvars_ok([],_).
 theory_newvars_ok([_-[_,_,_,Clause]|T],NewV):-
         newvars_ok(NewV,Clause),
-        theory_newvars_ok(T,NewV). 
+        theory_newvars_ok(T,NewV).
 
 lang_ok((Head:-Body),N):-
 	!,
@@ -2162,7 +2163,7 @@ lang_ok1([Pred|Preds],N):-
 	lang_ok1(Preds1,N).
 
 rewrite_clause(sld,_,_,(X:-X)):- !.
-rewrite_clause(restricted_sld,true,(Head:-Body),(Head1:-Body1)):- 
+rewrite_clause(restricted_sld,true,(Head:-Body),(Head1:-Body1)):-
 	!,
         optimise((Head:-Body),(Head1:-Body1)).
 rewrite_clause(_,_,Clause,Clause).
@@ -2282,7 +2283,7 @@ flatten_matched_atoms(Loc,M):-
                 flatten(0,IVal,BSize,BSize1);
                 flatten(0,IVal,Last,BSize1)),
         asserta(M:'$aleph_sat'(botsize,BSize1)),
-	(Last < BSize1 -> 
+	(Last < BSize1 ->
         	asserta(M:'$aleph_sat'(lastlit,BSize1));
         	asserta(M:'$aleph_sat'(lastlit,Last))), !.
 flatten_matched_atoms(_,_M).
@@ -2327,7 +2328,7 @@ get_aleph_lit(Lit,PLit,Arg):-
 	(var(Term) -> arg(Arg,PLit,Term);arg(Arg,PLit,aleph_const(Term))),
 	NextArg is Arg - 1,
 	get_aleph_lit(Lit,PLit,NextArg), !.
-	
+
 % Claudien-style consistency checking as described by De Raedt and Dehaspe, 1996
 % currently does not retain actual substitutions that result in inconsistencies
 % also, only checks for constraints of the form false:- ...
@@ -2336,7 +2337,7 @@ ccheck(S,(aleph_false:-Body),[],[0,N|_],M):-
 	(Body = true ->
 		N is inf;
 		arg(11,S,LContra),
-		(LContra = false -> 
+		(LContra = false ->
         		arg(14,S,Depth),
         		arg(29,S,Time),
 			findall(X,(resource_bound_call(Time,Depth,Body,M),X=1),XL),
@@ -2360,7 +2361,7 @@ lazy_ccheck(_,_,N,M):-
 
 % posonly formula as described by Muggleton, ILP-96
 prove_examples(S,Flag,Contradiction,Entry,Best,CL,L2,Clause,Pos,Rand,PCover,RCover,[P,B,CL,I,G],M):-
-	
+
 	arg(4,S,_/Evalfn),
 	Evalfn = posonly, !,
         arg(11,S,LazyOnContra),
@@ -2382,21 +2383,21 @@ prove_examples(S,Flag,Contradiction,Entry,Best,CL,L2,Clause,Pos,Rand,PCover,RCov
         %  I is M - D - Sz,
         I is A - B - C.
 prove_examples(S,_,_,Entry,_,CL,_,_,Pos,Neg,Pos,Neg,[PC,NC,CL],M):-
-		
+
         arg(10,S,LazyOnCost),
         LazyOnCost = true, !,
         prove_lazy_cached(S,Entry,Pos,Neg,Pos1,Neg1,M),
         interval_count(Pos1,PC),
         interval_count(Neg1,NC).
 prove_examples(S,_,true,Entry,_,CL,_,_,Pos,Neg,Pos,Neg,[PC,NC,CL],M):-
-		
+
         arg(11,S,LazyOnContra),
         LazyOnContra = true, !,
         prove_lazy_cached(S,Entry,Pos,Neg,Pos1,Neg1,M),
         interval_count(Pos1,PC),
         interval_count(Neg1,NC).
 prove_examples(S,Flag,_,Ent,Best,CL,L2,Clause,Pos,Neg,PCover,NCover,[PC,NC,CL],M):-
-	
+
 	arg(3,S,RefineOp),
 	(RefineOp = false; RefineOp = auto),
         arg(7,S,ClauseLength),
@@ -2532,7 +2533,7 @@ lazy_prove_neg(S,Flag,Entry,_,[P1,_],Clause,Neg,NCover,NCount,M):-
 % For MiAcc =:= 0, Negs was being set to P1 + 1. Unclear why.
 % This definition is as it was up to Aleph 2.
 get_max_negs(Noise/MinAcc,P1,N):-
-        number(P1), 
+        number(P1),
 	(MinAcc =:= 0.0 -> N is Noise;
         	(N1 is integer((1-MinAcc)*P1/MinAcc),
 		(Noise < N1 -> N is Noise; N is N1))
@@ -2643,7 +2644,7 @@ update_best(S,Clause,_,_,Label/Node,Label1/Node1,Label/Node,M):-
         show_clause(good,Label1,Clause,Node1,M),
         record_clause(good,Label1,Clause,Node1,M).
 
-update_good(Label,Clause,M):- 
+update_good(Label,Clause,M):-
 	setting(good,true,M), !,
 	Label = [_,_,L|_],
 	setting(check_good,Flag,M),
@@ -2671,7 +2672,7 @@ update_best_theory(_,Theory,PCover,NCover,Label/_,Label1/Node1,Label1/Node1,M):-
 	Label1 = [_,_,_,Gain1E|_],
 	arithmetic_expression_value(GainE,Gain),
 	arithmetic_expression_value(Gain1E,Gain1),
-	Gain1 > Gain, !, 
+	Gain1 > Gain, !,
 	retractall(M:'$aleph_search'(selected,_)),
         asserta(M:'$aleph_search'(selected,selected(Label1,Theory,PCover,NCover))),
 	show_theory(newbest,Label1,Theory,Node1,M),
@@ -2719,7 +2720,7 @@ prune_open(S,_,[_,_,_,Best|_]/_,M):-
 	built_in_prune(Evalfn),
         M:'$aleph_search_gain'(_,_,_,Label),
 	best_value(Evalfn,S,Label,Best1,M),
-	Best1 =< Best, 
+	Best1 =< Best,
         retract(M:'$aleph_search_gain'(_,_,_,Label)),
 	fail.
 prune_open(_,_,_,_M).
@@ -2848,7 +2849,7 @@ potentially_good([_,N|_],[_,N1|_]):-
 
 % prove with caching
 % if entry exists in cache, then return it
-% otherwise find and cache cover 
+% otherwise find and cache cover
 % if ``exact'' flag is set then only check proof for examples
 % in the part left over due to lazy theorem-proving
 % ideas in caching developed in discussions with James Cussens
@@ -2886,11 +2887,11 @@ prove_cache(upper,S,Type,_,Clause,Intervals,IList,Count,M):-
         	prove(Depth/Time/Proof,Type,Clause,IList1,IList,Count,M);
         	prove(Depth/Time/Proof,Type,Clause,Intervals,IList,Count,M)).
 
-prove_intervals(DepthTime,Type,Clause,I1/Left,IList,Count,M):- 
+prove_intervals(DepthTime,Type,Clause,I1/Left,IList,Count,M):-
 	!,
 	aleph_append(Left,I1,Intervals),
 	prove(DepthTime,Type,Clause,Intervals,IList,Count,M).
-prove_intervals(DepthTime,Type,Clause,Intervals,IList,Count,M):- 
+prove_intervals(DepthTime,Type,Clause,Intervals,IList,Count,M):-
 	prove(DepthTime,Type,Clause,Intervals,IList,Count,M).
 
 prove_cached(S,Type,Entry,I1/Left,Clause,Intervals,IList,Count,M):-
@@ -3046,14 +3047,14 @@ prove(Flags,Type,Clause,[Interval|Intervals],IList,Count,M):-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % T A I L - R E C U R S I V E  P R O V E/6
- 
+
 % use this rather than the prove/6 above for tail recursion
 % written by James Cussens
- 
+
 
 % prove(DepthTime,Type,Clause,Intervals,IList,Count,M):-
        % prove2(Intervals,DepthTime,Type,Clause,0,IList,Count,M).
- 
+
 % code for tail recursive cover testing
 % starts here
 
@@ -3077,7 +3078,7 @@ prove2([Current-Finish|Intervals],ProofFlags,Type,Clause,InCount,Sofar,OutCount,
             Sofar=[Current-_Last|_Rest],!,
             prove3([Next-Finish|Intervals],ProofFlags,Type,Clause,InCount,Sofar,OutCount,M)
         ).
- 
+
 %when Sofar is not a variable
 prove3([Current-Finish|Intervals],Depth/Time/Proof,Type,(Head:-Body),InCount,Sofar,OutCount,M) :-
 	M:example(Current,Type,Example),
@@ -3099,8 +3100,8 @@ prove3([Current-Finish|Intervals],ProofFlags,Type,Clause,InCount,Sofar,OutCount,
             Next is Current+1,!,
             prove3([Next-Finish|Intervals],ProofFlags,Type,Clause,InCount,Sofar,OutCount,M)
         ).
- 
- 
+
+
 % code for tail recursive cover testing
 % ends here
 
@@ -3125,7 +3126,7 @@ prove1(restricted_sld,Depth/Time,Example,(Head:-Body),M):-
 	\+((\+(((Example = Head),resource_bound_call(Time,Depth,Body,M))))), !.
 prove1(sld,Depth/Time,Example,_,M):-
 	\+(\+(resource_bound_call(Time,Depth,Example,M))), !.
-	
+
 index_prove1(_,_,_,Num,Last,Num,_M):-
 	Num > Last, !.
 index_prove1(Depth/Time/Proof,Type,Clause,Num,Finish,Last,M):-
@@ -3236,7 +3237,7 @@ update_cache(Entry,Type,I,M):-
         asserta(M:'$aleph_search_cache'(NewEntry)), !.
 update_cache(_,_,_,_M).
 
-	
+
 add_prune_cache(false,_M):- !.
 add_prune_cache(Entry,M):-
 	(M:'$aleph_global'(caching,set(caching,true))->
@@ -3327,7 +3328,7 @@ find_tree(Type,M):-
 get_start_distribution(regression,0-[0,0],_M):- !.
 get_start_distribution(model,0-[0,0],M):-
 	setting(evalfn,mse,M), !.
-get_start_distribution(model,0-Distribution,M):- 
+get_start_distribution(model,0-Distribution,M):-
 	setting(evalfn,accuracy,M), !,
 	(setting(classes,Classes,M) -> true;
 		!,
@@ -3364,7 +3365,7 @@ find_tree1([_|LeavesLeft],S,Type,Predict,M):-
 	find_tree1(LeavesLeft,S,Type,Predict,M).
 
 prune_rules(S,Tree,Predict,M):-
-	setting(prune_tree,true,M), 
+	setting(prune_tree,true,M),
 	prune_rules1(Tree,S,Predict,M), !.
 prune_rules(_,_,_,_M).
 
@@ -3460,7 +3461,7 @@ greedy_prune_rule1(Tree,Flags,PredictArg,[Head|Body],Err0,_,_,M):-
 	leaf_prediction(Tree,Total-Distribution,_,Incorrect),
 	estimate_error(Tree,Incorrect,Total,Upper,M),
 	M:'$aleph_search'(tree_besterror,besterror(_,BestError)),
-	Upper =< BestError, 
+	Upper =< BestError,
 	retract(M:'$aleph_search'(tree_besterror,besterror(_,BestError))),
 	asserta(M:'$aleph_search'(tree_besterror,besterror([Head|Left],Upper))),
 	fail.
@@ -3473,7 +3474,7 @@ strip_negs([not(L)|T],[L|T1]):-
 	strip_negs(T,T1).
 strip_negs([L|T],[L|T1]):-
 	strip_negs(T,T1).
-	
+
 add_tree(_,Tree,Predict,M):-
 	retract(M:'$aleph_search'(tree_leaf,l(_,_,Leaf,Examples))),
 	Leaf = [Clause,Cost,P],
@@ -3525,7 +3526,7 @@ add_model(Evalfn,Clause,PredictArg,Examples,_,_,_,M):-
 		retract(M:'$aleph_local'(tree_model,_,_,_)),
 		asserta(M:'$aleph_local'(tree_model,C1,Total,Error));
 		true),
-	fail.	
+	fail.
 add_model(_,_,_,_,Clause,Total,Error,M):-
 	retract(M:'$aleph_local'(tree_model,Clause,Total,Error)).
 
@@ -3538,9 +3539,9 @@ find_model_error(Evalfn,Examples,(Head:-Body),[PredictArg],T,E,M):-
 			M:example(N,pos,Example),
 			copy_iargs(Arity,Example,Head,PredictArg),
 			once(M:Body),
-			arg(PredictArg,Head,Pred), 
+			arg(PredictArg,Head,Pred),
 			arg(PredictArg,Example,Actual)
-			), 
+			),
 		L),
 	sum_model_errors(L,Evalfn,0,0.0,T,E), !.
 
@@ -3564,7 +3565,7 @@ leaf_predicts(Arg,Model,Var):-
 leaf_predicts(Arg,Model,Var):-
 	Arg1 is Arg - 1,
 	leaf_predicts(Arg1,Model,Var).
-	
+
 leaf_prediction(classification,Total-Distribution,Class,Incorrect):-
 	find_maj_class(Distribution,N-Class),
 	Incorrect is Total - N.
@@ -3583,7 +3584,7 @@ find_maj_class([N-Class|Rest],MajClass):-
 can_split(S,Type,Predict,Leaf,Left,Right,M):-
 	arg(21,S,MinGain),
 	M:'$aleph_search'(tree_leaf,l(Leaf,_,[Clause,Cost,N],Examples)),
-	Cost >= MinGain, 
+	Cost >= MinGain,
 	get_best_subtree(S,Type,Predict,[Clause,Cost,N],Examples,Gain,Left,Right,M),
 	Gain >= MinGain,
 	p_message('found clauses'),
@@ -3632,7 +3633,7 @@ get_best_subtree(S,Type,Predict,[Clause,Cost,N],Examples,Gain,Left,Right,M):-
 							[ClF,CostF,NF,ExF],
 							[ClS,CostS,NS,ExS])))),
 
-	AvLeafCost =< 0.0, 
+	AvLeafCost =< 0.0,
 	!,
 	get_best_subtree(Interactive,Clause,Gain,Left,Right,M).
 get_best_subtree(S,_,_,[Clause|_],_,Gain,Left,Right,M):-
@@ -3646,8 +3647,8 @@ get_best_subtree(true,Clause,Gain,Left,Right,M):-
 	write('---------------'), nl,
 	pp_dclause(Clause,M),
 	findall(MCR-[Left,Right],
-		(M:'$aleph_search'(tree_gain,tree_gain(CostReduction,Left,Right)), 
-		  MCR is -1*CostReduction), 
+		(M:'$aleph_search'(tree_gain,tree_gain(CostReduction,Left,Right)),
+		  MCR is -1*CostReduction),
 		SplitsList),
 	keysort(SplitsList,Sorted),
 	get_best_split(Clause,Sorted,Gain,Left,Right),
@@ -3660,11 +3661,11 @@ get_best_split(Clause,Splits,Gain,Left,Right):-
 show_split_list(Clause,Splits):-
 	tab(4), write('Split Information'), nl,
 	tab(4), write('-----------------'), nl, nl,
-	tab(4), write('No.'), 
-	tab(4), write('Split'), 
+	tab(4), write('No.'),
+	tab(4), write('Split'),
 	nl,
-	tab(4), write('---'), 
-	tab(4), write('-----'), 
+	tab(4), write('---'),
+	tab(4), write('-----'),
 	nl,
 	show_split_list(Splits,1,Clause).
 
@@ -3872,9 +3873,9 @@ gcws(Clause,PCover,NCover,Clause1,M):-
 	(Body = true -> Body1 = not(AbLit) ; app_lit(not(AbLit),Body,Body1)),
 	Clause1 = (Head:-Body1).
 
-% greedy set-cover based construction of abnormality theory 
+% greedy set-cover based construction of abnormality theory
 % starts with the first exceptional example
-% each clause obtained is added to list of clauses to be specialised 
+% each clause obtained is added to list of clauses to be specialised
 cwinduce(M):-
 	store(greedy,M),
         set(greedy,true,M),
@@ -3919,7 +3920,7 @@ gen_ab_examples(Ab/_,PCover,NCover,M):-
 	delete_file(NegFile).
 
 % create_examples(+File,+OldType,+OldE,+NewType,-NewE)
-% copy OldE examples of OldType to give NewE examples of NewType 
+% copy OldE examples of OldType to give NewE examples of NewType
 % copy stored in File
 create_examples(File,Ab,OldT,OldE,NewT,[Next-Last],M):-
         tmp_file_stream(utf8,File,Stream),
@@ -4059,9 +4060,9 @@ aleph_subsumes(Lits,Lits1):-
 /**
  * sat(:Num:int) is det
  *
- * Num is an integer. 
- * Builds the bottom clause for positive example number Num. 
- * Positive examples are numbered from 1, and the numbering corresponds to the order of 
+ * Num is an integer.
+ * Builds the bottom clause for positive example number Num.
+ * Positive examples are numbered from 1, and the numbering corresponds to the order of
  * appearance.
  */
 sat(M:Num):-
@@ -4115,7 +4116,7 @@ sat(Type,Num,M):-
 	asserta(M:'$aleph_sat'(hovars,HeadOVars)),
 	get_vars(Atom,Input,HeadIVars),
 	asserta(M:'$aleph_sat'(hivars,HeadIVars)),
-	functor(Example,Name,Arity), 
+	functor(Example,Name,Arity),
 	get_determs(Name/Arity,L,M),
 	(M:'$aleph_global'(determination,determination(Name/Arity,'='/2))->
 		asserta(M:'$aleph_sat'(eq,true));
@@ -4156,7 +4157,7 @@ sat(_,_,M):-
  * Run a search on the current bottom clause, which can be obtained with the sat/1 command.
  */
 reduce(M:Cl):-
-	setting(search,Search,M), 
+	setting(search,Search,M),
 	catch(reduce(Search,Cl,M),abort,reinstate_values), !.
 
 reduce(Search,M):-
@@ -4276,7 +4277,7 @@ reduce(id,RClause,M):-
 reduce(ils,RClause,M):-
 	!,
 	retractall(M:'$aleph_search'(ils_nodes,_)),
-	retractall(M:'$aleph_search'(ils_selected,_)), 
+	retractall(M:'$aleph_search'(ils_selected,_)),
 	store_values([caching,language],M),
 	set(searchstrat,bf,M),
 	set(language,1,M),
@@ -4495,23 +4496,23 @@ find_clause(Search,RClause,M):-
         asserta(M:'$aleph_search'(best_label,BestSoFar)),
 	p1_message('best label so far'), p_message(BestSoFar),
         arg(3,S,RefineOp),
-		
+
 	stopwatch(StartClock),
         (RefineOp = false ->
                 get_gains(S,0,BestSoFar,[],false,[],0,L,[1],P,N,[],1,Last,NextBest,M),
 		update_max_head_count(0,Last,M);
 		clear_cache(M),
-		
+
 		interval_count(P,MaxPC),
 		asserta(M:'$aleph_local'(max_head_count,MaxPC)),
 		StartClause = 0-[Num,Type,[],aleph_false],
                 get_gains(S,0,BestSoFar,StartClause,_,_,_,L,[StartClause],
 				P,N,[],1,Last,NextBest,M)),
         asserta(M:'$aleph_search_expansion'(1,0,1,Last)),
-		
+
 	get_nextbest(S,_,M),
 	asserta(M:'$aleph_search'(current,current(1,Last,NextBest))),
-	
+
 	search(S,Nodes,M),
 	stopwatch(StopClock),
 	Time is StopClock - StartClock,
@@ -4648,7 +4649,7 @@ estimate_error(L/P1,U/P2,P,N,E,R):-
 			estimate_error(M/P3,U/P2,P,N,E,R)
 		)
 	).
-		
+
 
 zap_rest(Lits,M):-
 	retract(M:'$aleph_sat_litinfo'(LitNum,Depth,Atom,I,O,D)),
@@ -4664,7 +4665,7 @@ sat_prelims(M):-
 	clean_up_hypothesis(M),
 	reset_counts(M),
 	set_up_builtins(M).
-	
+
 
 reduce_prelims(L,P,N,M):-
 	clean_up_reduce(M),
@@ -4906,8 +4907,8 @@ induce(M:Program):-
         record_theory(Time,M),
 	noset(greedy,M),
 	reinstate(portray_search,M),
-		
-        p1_message('time taken'), p_message(Time), 
+
+        p1_message('time taken'), p_message(Time),
 	show_total_stats(M),
 	record_total_stats(M), !.
 
@@ -4923,7 +4924,7 @@ copy_theory(_,_M).
 copy_theory_inner(ClauseNum,[SubProgram|TailP],M):-
 	integer(ClauseNum),
 	ClauseNum > 0,!,
-	M:'$aleph_global'(theory,theory(ClauseNum,_,SubProgram,_,_)),	
+	M:'$aleph_global'(theory,theory(ClauseNum,_,SubProgram,_,_)),
 	ClauseNum1 is ClauseNum-1,
 	copy_theory_inner(ClauseNum1,TailP,M).
 
@@ -4964,7 +4965,7 @@ copy_theory_eval_inner((H:-B),Program):-
     copy_term((H:-B),(Head:-Body)),
     numbervars((Head:-Body),0,_),
 	add_lit_to_program(Body,Program).
-copy_theory_eval_inner((Lit),Program):- 
+copy_theory_eval_inner((Lit),Program):-
 	!,
 	copy_term(Lit,Lit1),
     numbervars(Lit1,0,_),
@@ -5059,7 +5060,7 @@ induce_cover(M:Program):-
 	record_theory(Time,M),
 	reinstate(portray_search,M),
 	reinstate(greedy,M),
-	p1_message('time taken'), p_message(Time), 
+	p1_message('time taken'), p_message(Time),
 	show_total_stats(M),
 	record_total_stats(M), !.
 
@@ -5067,7 +5068,7 @@ induce_cover(M:Program):-
  * induce_incremental(:Program:list) is det
  *
  * Rudimentary version of an interactive, incremental rule learner.
- * 
+ *
  * 1. ask the user for an example
  *  default is to use a new positive example from previous search
  *  if user responds with Ctrl-d (eof) then search stops
@@ -5086,7 +5087,7 @@ induce_cover(M:Program):-
  *    - overspecific: C is added as new positive example
  *    - overspecific because E: E is added as a new positive example
  *    - X: where X is some aleph command like "covers"
- *    - Ctrl-d (eof): return to Step 1		
+ *    - Ctrl-d (eof): return to Step 1
  */
 
 induce_incremental(M:Program):-
@@ -5143,7 +5144,7 @@ induce_incremental(M:Program):-
  * annealing currently restricted to using a fixed temperature
  * the temperature is specified by aleph_set(temperature,...)
  * the fixed temp. makes it equivalent to the Metropolis alg.
- * WSAT requires a ``random-walk probability'' 
+ * WSAT requires a ``random-walk probability''
  * the walk probability is specified by aleph_set(walk,...)
  * a walk probability of 0 is equivalent to doing standard GSAT
  * theory accuracy is the evaluation function
@@ -5181,7 +5182,7 @@ induce_theory(M:Program):-
  *
  * search for logical constraints that
  * hold in the background knowledge
- * A constraint is a clause of the form aleph_false:-... 
+ * A constraint is a clause of the form aleph_false:-...
  * This is modelled on the Claudien program developed by
  * L. De Raedt and his colleagues in Leuven
  * Constraints that are ``nearly true'' can be obtained
@@ -5225,7 +5226,7 @@ induce_modes(M:Modes):-
  * each good clause found in a search constitutes a new boolean feature
  * the maximum number of features is controlled by aleph_set(max_features,F)
  * the features are constructed by doing the following:
- * while (number of features =< F) do: 
+ * while (number of features =< F) do:
  * 1. randomly select an example;
  * 2. search for good clauses using the example selected;
  * 3. construct new features using good clauses
@@ -5243,7 +5244,7 @@ induce_features(M:Features):-
 	setting(max_features,FMax,M),
         record_settings(M),
         stopwatch(StartClock),
-        M:'$aleph_global'(atoms_left,atoms_left(pos,AtomsLeft)), 
+        M:'$aleph_global'(atoms_left,atoms_left(pos,AtomsLeft)),
 	repeat,
         gen_sample(pos,0,M),
 	retractall(M:'$aleph_global'(besthyp,besthyp(_,_,_,_,_))),
@@ -5260,8 +5261,8 @@ induce_features(M:Features):-
 	copy_features(Features,M),
 	show(features,M),
         record_features(Time,M),
-        retract(M:'$aleph_global'(atoms_left,atoms_left(pos,_))), 
-        assertz(M:'$aleph_global'(atoms_left,atoms_left(pos,AtomsLeft))), 
+        retract(M:'$aleph_global'(atoms_left,atoms_left(pos,_))),
+        assertz(M:'$aleph_global'(atoms_left,atoms_left(pos,AtomsLeft))),
         reinstate_values([good,check_good,updateback,construct_features,samplesize,greedy,explore,lazy_on_contradiction],M), !.
 
 
@@ -5269,7 +5270,7 @@ induce_features(M:Features):-
  * induce_tree(:Tree:list) is det
  *
  * construct a theory using recursive partitioning.
- * rules are obtained by building a tree 
+ * rules are obtained by building a tree
  * the tree constructed can be one of 4 types
  *        classification, regression, class_probability or model
  *        the type is set by aleph_set(tree_type,...)
@@ -5465,7 +5466,7 @@ has_class(Argno,Head,_,Class,_M):-
 	ground(Class), !.
 has_class(Argno,Head,Body,Class,M):-
 	arg(Argno,Head,DepVar),
-	in((DepVar=Class),Body,M), 
+	in((DepVar=Class),Body,M),
 	ground(Class), !.
 
 ask_example(E,M):-
@@ -5537,7 +5538,7 @@ process_hypothesis(overgeneral,M):-
                 clause_to_list(H,HL),
                 aleph_subsumes([Head|BodyL],HL)),
         assertz(M:(aleph_false:- Constraint)),
-        nl, p_message('added new constraint'). 
+        nl, p_message('added new constraint').
 process_hypothesis(overgeneral because not(E),M):-
 	!,
 	record_example(check,neg,E,_,M),
@@ -5570,7 +5571,7 @@ show_options(example_selection):-
 	tab(8),
 	write('-> "ok." to accept default example'), nl,
 	tab(8),
-	write('-> Enter an example'), nl, 
+	write('-> Enter an example'), nl,
 	tab(8),
 	write('-> ctrl-D or "none." to end'), nl, nl.
 show_options(hypothesis_selection):-
@@ -5582,15 +5583,15 @@ show_options(hypothesis_selection):-
 	tab(8),
         write('-> "prune." to prune clause and its refinements from the search'), nl,
         tab(8),
-	write('-> "overgeneral." to add clause as a constraint'), nl, 
+	write('-> "overgeneral." to add clause as a constraint'), nl,
 	tab(8),
-	write('-> "overgeneral because not(E)." to add E as a negative example'), nl, 
+	write('-> "overgeneral because not(E)." to add E as a negative example'), nl,
 	tab(8),
-	write('-> "overspecific." to add clause as a positive example'), nl, 
+	write('-> "overspecific." to add clause as a positive example'), nl,
 	tab(8),
-	write('-> "overspecific because E." to add E as a positive example'), nl, 
+	write('-> "overspecific because E." to add E as a positive example'), nl,
 	tab(8),
-	write('-> any Aleph command'), nl, 
+	write('-> any Aleph command'), nl,
 	tab(8),
 	write('-> "ctrl-D or "none." to end'), nl, nl.
 
@@ -5601,7 +5602,7 @@ show_options_web(example_selection):-
 	tab(8),
 	write('-> "ok." to accept default example'), nl,
 	tab(8),
-	write('-> Enter an example'), nl, 
+	write('-> Enter an example'), nl,
 	tab(8),
 	write('-> "none." to end'), nl, nl.
 show_options_web(hypothesis_selection):-
@@ -5613,18 +5614,18 @@ show_options_web(hypothesis_selection):-
 	tab(8),
     write('-> "prune." to prune clause and its refinements from the search'), nl,
     tab(8),
-	write('-> "overgeneral." to add clause as a constraint'), nl, 
+	write('-> "overgeneral." to add clause as a constraint'), nl,
 	tab(8),
-	write('-> "overgeneral because not(E)." to add E as a negative example'), nl, 
+	write('-> "overgeneral because not(E)." to add E as a negative example'), nl,
 	tab(8),
-	write('-> "overspecific." to add clause as a positive example'), nl, 
+	write('-> "overspecific." to add clause as a positive example'), nl,
 	tab(8),
-	write('-> "overspecific because E." to add E as a positive example'), nl, 
+	write('-> "overspecific because E." to add E as a positive example'), nl,
 	tab(8),
-	write('-> any Aleph command'), nl, 
+	write('-> any Aleph command'), nl,
 	tab(8),
 	write('-> "none." to end'), nl, nl.
-	
+
 
 get_performance(M):-
 	setting(evalfn,Evalfn,M),
@@ -5677,14 +5678,14 @@ write_cmatrix([Tp,Fp,Fn,Tn]):-
         tab(6), write_entry(W,Total), nl, nl,
         write('Accuracy = '), write(Accuracy), nl.
 
- 
+
 find_max_width([],W,W).
 find_max_width([V|T],W1,W):-
         name(V,VList),
         length(VList,VL),
         (VL > W1 -> find_max_width(T,VL,W);
                 find_max_width(T,W1,W)).
- 
+
 write_entry(W,V):-
         name(V,VList),
         length(VList,VL),
@@ -5700,7 +5701,7 @@ write_entry(W,V):-
 % "Using Theory Completion to Learn a Navigation Control Program",
 % Proceedings of the Twelfth International Conference on ILP (ILP2002),
 % S. Matwin and C.A. Sammut (Eds), LNAI 2583, pp 182-197,
-% 2003.  
+% 2003.
 % Alecto does the following: for each positive example,  an
 % abductive explanation is obtained. This explanation is set of
 % ground atoms. The union of abductive explanations from all
@@ -5708,7 +5709,7 @@ write_entry(W,V):-
 % These are then generalised to give the final theory. The
 % ground atoms in an abductive explanation are obtained using
 % Yamamoto's SOLD resolution or SOLDR (Skip Ordered Linear resolution for
-% Definite clauses). 
+% Definite clauses).
 % One complication with abductive learning is this: for a given
 % positive example to be provable, we require all the ground atoms
 % in its abductive explanation to be true. Correctly therefore,
@@ -5719,7 +5720,7 @@ write_entry(W,V):-
 
 abgen(Fact,M):-
 	abgen(Fact,_,M).
-	
+
 abgen(Fact,AbGen,M):-
 	retractall(M:'$aleph_search'(abgenhyp,hypothesis(_,_,_,_))),
 	Minf is -inf,
@@ -5779,7 +5780,7 @@ remove_explained([AbAtom|AbAtoms],(Head:-Body),Rest,M):-
 	remove_explained(AbAtoms,(Head:-Body),Rest,M).
 remove_explained([AbAtom|AbAtoms],(Head:-Body),[AbAtom|Rest],M):-
 	remove_explained(AbAtoms,(Head:-Body),Rest,M).
-	
+
 store_abduced_atoms([],[],_M).
 store_abduced_atoms([AbAtom|AbAtoms],[DbRef|DbRefs],M):-
 	assertz(M:'$aleph_search'(abduced,pclause(AbAtom,true)),DbRef),
@@ -5805,7 +5806,7 @@ sold_prove(Goal,SkippedGoals,M):-
 	sort(Skipped,SkippedGoals).
 
 soldnf_solve(Goal,Skipped,M):-
-	soldnf_solve(Goal,true,[],Skipped,M).    
+	soldnf_solve(Goal,true,[],Skipped,M).
 
 soldnf_solve((Goal,Goals),Status,SkippedSoFar,Skipped,M):-
 	!,
@@ -5872,7 +5873,7 @@ lazy_evaluate_refinement(Lits,Refine,_,_,_,Lits,Refine,_M).
 
 lazy_evaluate_refinement([],_,L,_,_,L,_M):- !.
 lazy_evaluate_refinement([Lit|Lits],LazyPreds,Path,PosCover,NegCover,Refine,M):-
-	lazy_evaluate([Lit],LazyPreds,Path,PosCover,NegCover,[Lit1],M), 
+	lazy_evaluate([Lit],LazyPreds,Path,PosCover,NegCover,[Lit1],M),
 	aleph_append([Lit1],Path,Path1), !,
 	lazy_evaluate_refinement(Lits,LazyPreds,Path1,PosCover,NegCover,Refine,M).
 
@@ -5962,7 +5963,7 @@ call_library_pred(OldLit,Depth,Lit,I,O,D,M):-
 	!,
 	p_message('completed'),
 	retract(M:'$aleph_local'(callno,NextCall)).
-	 
+
 evaluate(OldLit,_,Lit,I,O,D,M):-
 	functor(OldLit,Name,Arity),
 	functor(NewLit,Name,Arity),
@@ -6086,7 +6087,7 @@ condition_target(M):-
 	SPred =.. [_|Args],
 	functor(Fact,Name,Arity),
 	M:example(_,_,Fact),
-	Fact =.. [_|Args], 
+	Fact =.. [_|Args],
 	condition(SPred,M),
 	fail.
 condition_target(M):-
@@ -6100,7 +6101,7 @@ add_generator(M):-
 	functor(Pred,Name,Arity),
 	make_sname(Name,SName),
 	functor(SPred,SName,Arity),
-	(clause(M:SPred,_)-> 
+	(clause(M:SPred,_)->
 		true;
 		add_generator(Name/Arity,M),
 		p1_message('included generator'), p_message(SName/Arity)),
@@ -6212,7 +6213,7 @@ update_gsample(_,N,M):-
         assert(M:'$aleph_global'(last_example,last_example(rand,N))).
 update_gsample(_,_,_M).
 
-	
+
 slprove(_,true,_M):-
 	!.
 slprove(Mode,not(Goal),M):-
@@ -6270,7 +6271,7 @@ find_count(Clause,N,M):-
 	copy_term(Clause,Clause1),
 	M:'$aleph_global'(slp_count,Clause1,N), !.
 find_count(_,1,_M).
-	
+
 inc_count(Clause,M):-
 	retract(M:'$aleph_global'(slp_count,Clause,N)), !,
 	N1 is N + 1,
@@ -6288,10 +6289,10 @@ find_posgain(PCover,P,M):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% S E A R C H  I / O 
+% S E A R C H  I / O
 
 record_clause(good,Label,Clause,_,M):-
-	setting(good,true,M), 
+	setting(good,true,M),
 	setting(goodfile_stream,Stream,M), !,
 	set_output(Stream),
 	Label = [_,_,L|_],
@@ -6392,7 +6393,7 @@ record_settings(M):-
 record_settings(_M).
 
 show_clause(Flag,Label,Clause,Nodes,M):-
-        broadcast(clause(Flag,Label,Clause,Nodes)), 
+        broadcast(clause(Flag,Label,Clause,Nodes)),
 	p_message('-------------------------------------'),
 	(Flag=good -> p_message('good clause');
 		(Flag=sample-> p_message('selected from sample');
@@ -6444,7 +6445,7 @@ show_total_stats(M):-
 	M:'$aleph_global'(search_stats,search_stats(Nodes,_)), !,
 	p1_message('total clauses constructed'), p_message(Nodes).
 show_total_stats(_M).
-	
+
 show_atoms_left(M):-
 	M:'$aleph_global'(atoms_left,atoms_left(pos,PLeft)),
 	interval_count(PLeft,NLeft),
@@ -6466,7 +6467,7 @@ show_stats(Evalfn,[P,N,_,F|_]):-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % A U T O  -- R E F I N E
-% 
+%
 % built-in refinement operator
 
 gen_auto_refine(M):-
@@ -6577,7 +6578,7 @@ get_c_links([Pos/Type|T],Lit,GoalsSoFar,Goals):-
 	Goal = (TypeFact,V=C),
 	prefix_lits((Goal),GoalsSoFar,G1),
 	get_c_links(T,Lit,G1,Goals).
-	
+
 aleph_input_var(Var,Type,VarTypes):-
         aleph_member(Var/Type1,VarTypes),
 	nonvar(Type1),
@@ -6624,7 +6625,7 @@ consistent_vartypes([],_).
 consistent_vartypes([Var/Type|VarTypes],VTSoFar):-
         aleph_member2(Var/Type,VTSoFar),
         consistent_vartypes(VarTypes,VTSoFar).
-                                                                                
+
 inconsistent_vartypes([Var/Type|_],VTSoFar):-
         aleph_member(Var1/Type1,VTSoFar),
         Var == Var1,
@@ -6663,7 +6664,7 @@ aleph_mode_linked([Lit|Lits],LitsSoFar,M):-
 	aleph_mode_linked(Lits,L1,M).
 
 auto_refine(aleph_false,Head,M):-
-	example_saturated(Example,M), 
+	example_saturated(Example,M),
 	functor(Example,Name,Arity),
         aleph_get_hlit(Name/Arity,Head,M),
 	Head \== aleph_false.
@@ -6697,7 +6698,7 @@ auto_refine(1,Clause1,Clause2,M):-
 	!,
 	auto_refine(Clause1,Clause2,M).
 auto_refine(L,Clause1,Clause2,M):-
-	L1 is L - 1, 
+	L1 is L - 1,
 	auto_refine(L1,Clause1,Clause,M),
 	(Clause2 = Clause;
 		auto_refine(Clause,Clause2,M)).
@@ -6748,19 +6749,19 @@ tautology((Head:-Body),M):-
 	Head == Lit, !.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% A U T O -- M O D E   
+% A U T O -- M O D E
 
 % automatic inference of mode declarations given a set of
 % determinations. The procedure works in two parts: (i) finding
 % equivalence classes of types; and (ii) finding an input/output
 % assignment.
-% 
+%
 % Finding equivalence classes of types is similar to
 % the work of McCreath and Sharma, Proc of the 8th Australian
 % Joint Conf on AI pages 75-82, 1995. However, unlike there
 % types in the same equivalence class are given the same name only if
 % they "overlap" significantly (the overlap of type1 with type2
-% is the proportion of elements of type1 that are also elements of type2). 
+% is the proportion of elements of type1 that are also elements of type2).
 % Significantly here means an overlap at least some threshold
 % T (set using typeoverlap, with default 0.95).
 % Since this may not be perfect, modes are also produced
@@ -6768,7 +6769,7 @@ tautology((Head:-Body),M):-
 % differently named types in the same equivalence class.
 % The user has to however explicitly include a determination declaration for
 % the equality predicate.
-% 
+%
 % The i/o assignment is not straightforward, as we may be dealing
 % with non-functional definitions. The assignment sought here is one
 % that maximises the number of input args as this gives the
@@ -6908,7 +6909,7 @@ infer_modes([Head|Rest],Thresh,Types,[Head1|Rest1],M):-
 infer_ordered_modes([],_,_,_,_,[],_M):- !.
 infer_ordered_modes(L,Thresh,Loc,Seen,Left,[Mode|Rest],M):-
 	score_modes(L,Thresh,Seen,Left,ScoredPreds,M),
-	keysort(ScoredPreds,[_-Pred|_]), 
+	keysort(ScoredPreds,[_-Pred|_]),
 	infer_mode(Pred,Thresh,Loc,Seen,Mode,Seen1,M),
 	aleph_delete(Pred,L,L1),
 	aleph_delete_list(Seen1,Left,Left1),
@@ -7001,7 +7002,7 @@ infer_negations([mode(_,Pred)|Modes],NegModes):-
 	infer_negations(Modes,NegModes).
 infer_negations([mode(_,Pred)|Modes],[mode(1,not(Pred))|NegModes]):-
 	infer_negations(Modes,NegModes).
-	
+
 
 pairwise_equality((+N1 = +N2),M):-
 	M:'$aleph_search'(modes,typemapped(_,Best,T1)),
@@ -7018,11 +7019,11 @@ add_inferred_modes([Mode|Modes],Flag,M):-
 	write(Mode), nl,
 	(Flag = true -> M:Mode; true),
 	add_inferred_modes(Modes,Flag,M).
-	
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % S T O C H A S T I C   S E A R C H
- 
+
 % sample_clauses(+N,-Clauses)
 %	return sample of at most N legal clauses from hypothesis space
 %	If a bottom clause exists then
@@ -7145,7 +7146,7 @@ get_clause_sample(N,Universe,CL,Clauses,M):-
 	get_clause_sample(N1,Universe,CL,Clauses,M).
 
 % draw_legalclause_wo_repl(+L,+CL,-C,-Lits,M)
-%	randomly draw without replacement a legal clause of length >= L and =< CL 
+%	randomly draw without replacement a legal clause of length >= L and =< CL
 %	also returns literals from bottom used to construct clause
 draw_legalclause_wo_repl(L,CL,C,C1,M):-
 	L =< CL,
@@ -7161,10 +7162,10 @@ draw_legalclause_wo_repl(L,CL,C,C1,M):-
 %	here, a ``good clause'' is one that is in the top K-percentile of clauses
 %	estimation is by Monte Carlo using at most T trials
 %	probabilities are normalised to add to 1
-estimate_clauselength_distribution(L,T,K,D,M):-	
+estimate_clauselength_distribution(L,T,K,D,M):-
 	M:'$aleph_sat'(example,example(Type,Example)),
 	M:'$aleph_sat'(random,clauselength_distribution(Type,Example,L,T,K,D)), !.
-estimate_clauselength_distribution(L,T,K,D,M):-	
+estimate_clauselength_distribution(L,T,K,D,M):-
 	setting(evalfn,Evalfn,M),
 	estimate_clauselength_scores(L,T,Evalfn,[],S,M),
 	select_good_clauses(S,K,Good),
@@ -7191,7 +7192,7 @@ estimate_scores([L-[_,_,_,C]|Rest],Evalfn,S1,S,M):-
 	extract_count(neg,Label,NC),
 	complete_label(Evalfn,C,[PC,NC,L],[_,_,_,Val|_],M),
 	estimate_scores(Rest,Evalfn,[-Val-L|S1],S,M).
-	
+
 % ``good'' clauses are defined to be those in the top K-percentile
 %	policy on ties is to include them
 select_good_clauses(S,K,Good):-
@@ -7227,7 +7228,7 @@ count_frequency([Entry|T],X,N):-
 
 % 	estimate total number of legal clauses in space
 %	bounded by bot
-estimate_numbers(Total,M):- 
+estimate_numbers(Total,M):-
 	(M:'$aleph_sat'(example,example(_,_)) -> true; rsat),
 	setting(clauselength,CL,M),
 	estimate_numbers(CL,1,400,Total,M).
@@ -7269,7 +7270,7 @@ estimate_numbers(L,Trials,Sample,TotalSoFar,T,M):-
 %	estimate formed from average over T trials with sample S
 estimate_number(_,_,L,0,M):-
         M:'$aleph_sat'(lastlit,Last),
-        Last < L, !.   
+        Last < L, !.
 estimate_number(T,S,L,N,M):-
 	T > 0,
 	p1_message('Estimate legal clauses with length'), p_message(L),
@@ -7346,7 +7347,7 @@ print_distribution(M):-
 	write('Estimated size of hypothesis space = '),
 	(M:'$aleph_sat'(random,hypothesis_space(S)) -> true; S = 0),
 	write(S), write(' clauses'), nl.
-	
+
 % count_clause_status(+List,+Status,-C1,-C2)
 %	count number of clauses in List with status Status
 %	C1 is the number of such clauses
@@ -7383,7 +7384,7 @@ randclause_wo_repl(L,C,S,C1,M):-
 randclause_wo_repl(N,L,C,S,C1,M):-
 	N > 0,
 	randclause(L,C,S,C1,M),	% if not accounting for variable renamings
-	% copy_term(C,C1),	% if accounting for variable renamings	
+	% copy_term(C,C1),	% if accounting for variable renamings
 	% numbervars(C1,0,_),	% if accounting for variable renamings
 	\+(M:prune(C)),
 	split_clause(C,Head,Body),
@@ -7401,7 +7402,7 @@ randclause_wo_repl(N,L,C,S,C1,M):-
 	randclause_wo_repl(N1,L,C,S,C1,M), !.
 randclause_wo_repl(_,1,C,S,C1,M):-
 	randclause(1,C,S,C1,M).	% if not accounting for variable renamings
-	% copy_term(C,C1),	% if accounting for variable renamings	
+	% copy_term(C,C1),	% if accounting for variable renamings
 	% numbervars(C1,0,_),	% if accounting for variable renamings
 
 % randclause(+L,-C,-S,-Lits,M)
@@ -7477,7 +7478,7 @@ clause_status([Lit|Lits],Key,LitsSoFar,S,S1,M):-
 	clause_status(Lits,Key,Lits1,S,S1,M).
 clause_status(_,_,_,_,illegal,_M).
 
-	
+
 % randselect(+L,+Last,+Key,+LitsSoFar,-Lits,M)
 % randomly select L distinct literals to give Lits
 % Last is the last literal number in the bottom clause
@@ -7500,12 +7501,12 @@ randselect1(L,Key,Avail,LitsSoFar,[LitNum|Lits],M):-
 	random_select(LitNum,Avail,Left),
 	(Key = false ->
         	M:'$aleph_sat_litinfo'(LitNum,_,_,_,_,D);
-        	M:'$aleph_sat_litinfo'(LitNum,Key,_,_,_,_,D)), 
+        	M:'$aleph_sat_litinfo'(LitNum,Key,_,_,_,_,D)),
         update_list(D,Left,Left1),
         aleph_delete_list([LitNum|LitsSoFar],Left1,Avail1),
         L1 is L - 1,
         randselect1(L1,Key,Avail1,[LitNum|LitsSoFar],Lits,M).
- 
+
 % get_rand_lit(+Last,+Key,+LitsSoFar,-LitNum,M)
 % randomly select a literal number from 2 - Last
 % and not in list LitsSoFar
@@ -7549,7 +7550,7 @@ num_to_length1(L,CL,_,_,CL,_M):-
 num_to_length1(L,CL,N,TotalSoFar,Length,M):-
 	M:'$aleph_sat'(random,number_of_clauses(L,T)),
 	NClauses is TotalSoFar + T,
-	(N =< NClauses ->  
+	(N =< NClauses ->
 		(T < 1.0 -> Length is L - 1; Length = L) ;
 		L1 is L + 1,
 		num_to_length1(L1,CL,N,NClauses,Length,M)).
@@ -7682,7 +7683,7 @@ old_move(theories,T,M):-
 		true;
 		asserta(M:'$aleph_search_seen'(N,_Hash)), !,
 		fail).
-		
+
 extract_clauses_with_length([],[]).
 extract_clauses_with_length([L-[_,_,_,C]|T],[L-C|T1]):-
 	extract_clauses_with_length(T,T1).
@@ -7722,7 +7723,7 @@ pp_dclauses(Theory,M):-
         pp_dclause(Clause,M),
         fail.
 pp_dclauses(_,_M):- nl.
- 
+
 pp_dclause((H:-true),Pretty,M):-
         !,
         pp_dclause(H,Pretty,M).
@@ -7743,14 +7744,14 @@ pp_dclause((Lit),Pretty,M):-
         numbervars(Lit1,0,_),
         aleph_portray(Lit1,Pretty,M),
         write('.'), nl.
- 
+
 % pretty print a definite clause list: head of list is + literal
 pp_dlist([],_M):- !.
 pp_dlist(Clause,M):-
         (M:'$aleph_global'(portray_literals,set(portray_literals,true))->
                 pp_dlist(Clause,true,M);
                 pp_dlist(Clause,false,M)).
- 
+
 pp_dlist(Clause,Pretty,M):-
         copy_term(Clause,[Head1|Body1]),
         numbervars([Head1|Body1],0,_),
@@ -7763,7 +7764,7 @@ pp_dlist(Clause,Pretty,M):-
         nl,
         M:'$aleph_global'(print,set(print,N)),
         print_litlist(Body1,Pretty,1,N,M)).
- 
+
 print_litlist([],_,_,_,_M).
 print_litlist([Lit],Pretty,LitNum,_,M):-
         !,
@@ -7771,7 +7772,7 @@ print_litlist([Lit],Pretty,LitNum,_,M):-
 print_litlist([Lit|Lits],Pretty,LitNum,LastLit,M):-
         print_lit(Lit,Pretty,LitNum,LastLit,', ',NextLit,M),
         print_litlist(Lits,Pretty,NextLit,LastLit,M).
- 
+
 print_lits((Lit,Lits),Pretty,LitNum,LastLit,M):-
         !,
         (Pretty = true ->
@@ -7786,7 +7787,7 @@ print_lit(Lit,Pretty,LitNum,LastLit,Sep,NextLit,M):-
         (LitNum = 1 -> tab(3);true),
         aleph_portray(Lit,Pretty,M), write(Sep),
         (LitNum=LastLit-> nl,NextLit=1; NextLit is LitNum + 1).
- 
+
 p1_message(Mess):-
 	write('['), write(Mess), write('] ').
 
@@ -7898,14 +7899,14 @@ erase_refs([DbRef|DbRefs]):-
 max_in_list([X],X):- !.
 max_in_list([X|T],Z):-
 	max_in_list(T,Y),
-	(X @> Y -> Z = X; Z = Y). 
+	(X @> Y -> Z = X; Z = Y).
 
 % min_in_list(+List,-Max)
 %	return largest element in a list
 min_in_list([X],X):- !.
 min_in_list([X|T],Z):-
 	min_in_list(T,Y),
-	(X @> Y -> Z = Y; Z = X). 
+	(X @> Y -> Z = Y; Z = X).
 
 % remove_alpha_variants(+List1,-List2):-
 %	remove alphabetic variants from List1 to give List2
@@ -7916,7 +7917,7 @@ remove_alpha_variants([X|Y],L):-
 	remove_alpha_variants(Y,L).
 remove_alpha_variants([X|Y],[X|L]):-
 	remove_alpha_variants(Y,L).
- 
+
 % alphabetic_variant(+Term1,+Term2)
 %	true if Term1 is the alphabetic variant of Term2
 alphabetic_variant(Term1,Term2):-
@@ -7977,7 +7978,7 @@ extend_clause((Head:-Body),Lit,(Head:-Body1)):-
         !,
         app_lit(Lit,Body,Body1).
 extend_clause(Head,Lit,(Head:-Lit)).
- 
+
 app_lit(L,(L1,L2),(L1,L3)):-
         !,
         app_lit(L,L2,L3).
@@ -8015,7 +8016,7 @@ list_to_goals([Goal|Goals],(Goal,Goals1)):-
  * goals_to_list(-Goals:term,-List:list) is det
  *
  * Converts a coonjunction of goals to a list
- * 
+ *
  */
 goals_to_list((true,Goals),T):-
 	!,
@@ -8167,7 +8168,7 @@ quicksort(Order,[X|Tail],Sorted):-
 	quicksort(Order,Big,SBig),
         (Order=ascending-> aleph_append([X|SBig],SSmall,Sorted);
                 aleph_append([X|SSmall],SBig,Sorted)).
-	
+
 partition(_,[],[],[]).
 partition(X,[Y|Tail],[Y|Small],Big):-
 	X @> Y, !,
@@ -8335,7 +8336,7 @@ interval_subtract(Start1-Finish1,Start2-Finish2,[Start1-S1,S2-Finish1]):-
 	S1 >= Start1, Finish1 >= S2, !.
 
 
-% code for set manipulation utilities 
+% code for set manipulation utilities
 % taken from the Yap library
 % aleph_ord_subtract(+Set1,+Set2,?Difference)
 % is true when Difference contains all and only the elements of Set1
@@ -8351,7 +8352,7 @@ aleph_ord_subtract(=,_,    Tail1,_,    Tail2,Difference) :-
 aleph_ord_subtract(<,Head1,Tail1,Head2,Tail2,[Head1|Difference]) :-
         aleph_ord_subtract(Tail1,[Head2|Tail2],Difference).
 aleph_ord_subtract(>,Head1,Tail1,_,    Tail2,Difference) :-
-        aleph_ord_subtract([Head1|Tail1],Tail2,Difference). 
+        aleph_ord_subtract([Head1|Tail1],Tail2,Difference).
 
 % aleph_ord_disjoint(+Set1,+Set2)
 % is true when the two ordered sets have no element in common.  If the
@@ -8443,13 +8444,13 @@ occurs_in(Vars,Lit):-
 	functor(Lit,_,Arity),
 	occurs1(Vars,Lit,1,Arity).
 
-occurs1(Vars,Lit,Argno,MaxArgs):- 
+occurs1(Vars,Lit,Argno,MaxArgs):-
 	Argno =< MaxArgs,
 	arg(Argno,Lit,Term),
 	vars_in_term([Term],[],Vars1),
-	aleph_member(X,Vars), aleph_member(Y,Vars1), 
+	aleph_member(X,Vars), aleph_member(Y,Vars1),
 	X == Y, !.
-occurs1(Vars,Lit,Argno,MaxArgs):- 
+occurs1(Vars,Lit,Argno,MaxArgs):-
 	Argno < MaxArgs,
 	Next is Argno + 1,
 	occurs1(Vars,Lit,Next,MaxArgs).
@@ -8481,7 +8482,7 @@ clean_up_init(M):-
 	aleph_abolish('$aleph_good'/3,M),
 	retractall(M:'$aleph_search'(last_good,_)),
 	aleph_abolish('$aleph_feature'/2,M).
-	
+
 
 clean_up_sat(M):-
 	aleph_abolish('$aleph_sat'/2,M),
@@ -8575,7 +8576,7 @@ binom(N,P,O,Prob):-
         O2 is N - O,
         E2 is P2^O2,
         Prob is C*E1*E2, !.
- 
+
 aleph_choose(N,I,V):-
         NI is N-I,
         (NI > I -> pfac(N,NI,I,V) ; pfac(N,I,NI,V)).
@@ -8597,7 +8598,7 @@ pfac(N,I,C,F):-
 %	if Check = nocheck then no check is done
 %	returns example number N and Flag
 %	if Flag = new then example is a new example of Type
-record_example(check,Type,Example,N1,M):- 
+record_example(check,Type,Example,N1,M):-
 	(once(M:example(N1,Type,Example)) -> true;
 		record_example(nocheck,Type,Example,N1,M),
 		(retract(M:'$aleph_global'(atoms,atoms(Type,Atoms))) ->
@@ -8649,7 +8650,7 @@ check_recursive_calls(M):-
 check_recursive_calls(_M).
 
 check_posonly(M):-
-	M:'$aleph_global'(size,size(rand,N)), 
+	M:'$aleph_global'(size,size(rand,N)),
 	N > 0, !.
 check_posonly(M):-
 	setting(evalfn,posonly,M),
@@ -8845,7 +8846,7 @@ update_backpreds(Name/Arity,M):-
 	M:'$aleph_local'(backpred,Name/Arity), !.
 update_backpreds(Name/Arity,M):-
 	assertz(M:'$aleph_local'(backpred,Name/Arity)).
-	
+
 reset_counts(M):-
 	retractall(M:'$aleph_sat'(lastterm,_)),
 	retractall(M:'$aleph_sat'(lastvar,_)),
@@ -8899,7 +8900,7 @@ gen_featurenum(Feature1,M):-
         Feature1 is Feature0 + 1,
 	setting(max_features,FMax,M),
 	Feature1 =< FMax,
-        retract(M:'$aleph_feature'(last_feature,Feature0)), 
+        retract(M:'$aleph_feature'(last_feature,Feature0)),
         asserta(M:'$aleph_feature'(last_feature,Feature1)).
 gen_featurenum(1,M):-
         asserta(M:'$aleph_feature'(last_feature,1)).
@@ -8912,7 +8913,7 @@ gen_lits([Lit|Lits],[LitNum|Nums],M):-
 
 update_theory(ClauseIndex,M):-
         retract(M:'$aleph_global'(hypothesis,hypothesis(OldLabel,Hypothesis,
-				OldPCover,OldNCover))), 
+				OldPCover,OldNCover))),
 	index_clause(Hypothesis,ClauseIndex,Clause,M),
         (M:'$aleph_global'(example_selected,example_selected(_,Seed))-> true;
                 PCover = [Seed-_|_]),
@@ -8971,7 +8972,7 @@ rm_seeds(Type,RmIntervals,M) :-
         retract(M:'$aleph_global'(atoms_left,atoms_left(Type,OldIntervals))),
         rm_seeds1(RmIntervals,OldIntervals,NewIntervals),
         assertz(M:'$aleph_global'(atoms_left,atoms_left(Type,NewIntervals))).
- 
+
 rm_seeds1([],Done,Done).
 rm_seeds1([Start-Finish|Rest],OldIntervals,NewIntervals) :-
         rm_interval(Start-Finish,OldIntervals,MidIntervals),!,
@@ -9019,7 +9020,7 @@ update_coversets([Atom|Atoms],ClauseNum,Type,Label,M):-
 
 rm_intervals([],I,I).
 rm_intervals([I1|I],Intervals,Result):-
-	rm_interval(I1,Intervals,Intervals1), 
+	rm_interval(I1,Intervals,Intervals1),
 	rm_intervals(I,Intervals1,Result), !.
 
 rm_interval(_,[],[]).
@@ -9211,7 +9212,7 @@ chi_square(DF,Prob,ChisqVal):-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % L A B E L S   A N D    E V A L F N S
-% 
+%
 
 label_create(Clause,Label,M):-
         M:'$aleph_global'(last_example,last_example(pos,Last1)),
@@ -9247,7 +9248,7 @@ label_create(Clause,Type,Set,Label,M):-
 	setting(proof_strategy,Proof,M),
         prove(Depth/Time/Proof,Type,(Head:-Body,M),Set,Cover,_,M),
 	retractall(M:'$aleph_search'(pclause,_)),
-	(Type = pos -> 
+	(Type = pos ->
         	assemble_label(Cover,unknown,unknown,Label);
         	assemble_label(unknown,Cover,unknown,Label)).
 
@@ -9454,8 +9455,8 @@ read_all(Back,Pos,Neg,M):-
 	clean_up(M),
 	reset(M),
 	read_background(Back,M),
-	read_examples(Pos,Neg,M), 	
-	record_targetpred(M), 	
+	read_examples(Pos,Neg,M),
+	record_targetpred(M),
 	check_recursive_calls(M),
 	check_prune_defs(M),
 	check_user_search(M),
@@ -9622,7 +9623,7 @@ store_values([Parameter|T],M):-
 % store all relevant info related to current bottom
 %	details are stored in 5 idbs:
 %	1. bottom: points to 2 other idbs sat_X_n and lits_X_N
-%	2. sat_X_N: where X is the type of the current example and N the number 
+%	2. sat_X_N: where X is the type of the current example and N the number
 %		this contains misc stuff recorded by sat/2 for use by reduce/1
 %	3. lits_X_N: contains the lits in bottom
 %	4. ovars_X_N: contains output vars of lits in bottom
@@ -9652,7 +9653,7 @@ store_bottom(M):-
 	asserta(M:'$aleph_sat_litinfo'(Lit,Key,Depth,Atom,I,O,D)),
 	fail.
 store_bottom(_M).
-	
+
 
 reinstate(searchstate,M):-
 	!,
@@ -9691,9 +9692,9 @@ reinstate_values([Parameter|T],M):-
 % reinstate all saved values
 reinstate_values(M):-
 	reinstate_file_streams(M),
-	M:'$aleph_global'(save,save(_,_)), 
+	M:'$aleph_global'(save,save(_,_)),
 	repeat,
-	retract(M:'$aleph_global'(save,save(Parameter,Value))), 
+	retract(M:'$aleph_global'(save,save(Parameter,Value))),
 	(Value = unknown -> noset(Parameter,M) ; set(Parameter,Value,M)),
 	\+(M:'$aleph_global'(save,save(_,_))),
 	!.
@@ -9756,7 +9757,7 @@ aleph_setting(M:Variable,Value):-
 	setting(Variable,Value,M).
 
 setting(Variable,Value,M):-
-	nonvar(Variable), 
+	nonvar(Variable),
 	M:'$aleph_global'(Variable,set(Variable,Value1)), !,
 	Value = Value1.
 setting(Variable,Value,_M):-
@@ -9776,7 +9777,7 @@ noset(_,_M).
  * man(-Manual:URL) is det
  *
  * returns manual URL
- * 
+ *
  */
 man(M):-
 	aleph_manual(M).
@@ -9797,7 +9798,7 @@ determination(Pred1,Pred2,M):-
 /**
  * abducible(:Pred:term) is det
  *
- * Pred is of the form N/A, where the atom N is the name of the predicate, and A its arity. 
+ * Pred is of the form N/A, where the atom N is the name of the predicate, and A its arity.
  * Specifies that ground atoms with symbol N/A can be abduced if required.
  */
 abducible(M:Name/Arity):-
@@ -9832,17 +9833,17 @@ symmetric(Name/Arity,M):-
 /**
  * lazy_evaluate(:Pred:term) is det
  *
- * Pred V is of the form N/A, where the atom N is the name of the predicate, and A its arity. 
- * Specifies that outputs and constants for literals with symbol N/A are to be evaluated 
- * lazily during the search. This is particularly useful if the constants required 
- * cannot be obtained from the bottom clause constructed by using a single example. 
- * During the search, the literal is called with a list containing a pair of lists for each 
- * input argument representing `positive' and `negative' substitutions obtained 
- * for the input arguments of the literal. These substitutions are obtained by executing 
- * the partial clause without this literal on the positive and negative examples. 
- * The user needs to provide a definition capable of processing a call with a list of 
- * list-pairs in each argument, and how the outputs are to be computed from such information. 
- * For further details see A. Srinivasan and R. Camacho, Experiments in numerical reasoning with 
+ * Pred V is of the form N/A, where the atom N is the name of the predicate, and A its arity.
+ * Specifies that outputs and constants for literals with symbol N/A are to be evaluated
+ * lazily during the search. This is particularly useful if the constants required
+ * cannot be obtained from the bottom clause constructed by using a single example.
+ * During the search, the literal is called with a list containing a pair of lists for each
+ * input argument representing `positive' and `negative' substitutions obtained
+ * for the input arguments of the literal. These substitutions are obtained by executing
+ * the partial clause without this literal on the positive and negative examples.
+ * The user needs to provide a definition capable of processing a call with a list of
+ * list-pairs in each argument, and how the outputs are to be computed from such information.
+ * For further details see A. Srinivasan and R. Camacho, Experiments in numerical reasoning with
  * ILP, Jnl. Logic Programming.
  */
 lazy_evaluate(M:Name/Arity):-
@@ -9854,9 +9855,9 @@ lazy_evaluate(Name/Arity,M):-
 /**
  * model(:Pred:term) is det
  *
- * Pred is of the form N/A, where the atom N is the name of the predicate, and A its arity. 
- * Specifies that predicate N/A will be used to construct and execute models 
- * in the leaves of model trees. This automatically results in predicate N/A being 
+ * Pred is of the form N/A, where the atom N is the name of the predicate, and A its arity.
+ * Specifies that predicate N/A will be used to construct and execute models
+ * in the leaves of model trees. This automatically results in predicate N/A being
  * lazily evaluated (see lazy_evaluate/1).
  */
 model(M:Name/Arity):-
@@ -9868,9 +9869,9 @@ model(Name/Arity,M):-
 /**
  * positive_only(:Pred:term) is det
  *
- * Pred is of the form N/A, where the atom N is the name of the predicate, 
- * and A its arity. States that only positive substitutions are required 
- * during lazy evaluation of literals with symbol N/A. 
+ * Pred is of the form N/A, where the atom N is the name of the predicate,
+ * and A its arity. States that only positive substitutions are required
+ * during lazy evaluation of literals with symbol N/A.
  * This saves some theorem-proving effort.
  */
 positive_only(M:Name/Arity):-
@@ -9901,7 +9902,7 @@ modes(N/A,Mode,M):-
 /**
  * modeh(:Recall:int,+PredicateMode:term) is det
  *
- * Recall is one of: a positive integer or *. Mode is a mode template as in a mode/2 declaration. 
+ * Recall is one of: a positive integer or *. Mode is a mode template as in a mode/2 declaration.
  * Declares a mode for the head of a hypothesised clause. Required when evalfn is posonly.
  */
 modeh(M:Recall,Pred):-
@@ -9917,7 +9918,7 @@ modeh(Recall,Pred,M):-
 /**
  * modeb(:Recall:int,+PredicateMode:term) is det
  *
- * Recall is one of: a positive integer or *. Mode is a mode template as in a mode/2 declaration. 
+ * Recall is one of: a positive integer or *. Mode is a mode template as in a mode/2 declaration.
  * Declares a mode for a literal in the body of a hypothesised clause.
  */
 modeb(M:Recall,Pred):-
@@ -9957,7 +9958,7 @@ add_modes(Name/_,M):-
 add_modes(_,_M).
 
 feature(Id,Feature,M):-
-	M:'$aleph_feature'(feature,feature(Id,_,_,Template,Body)), 
+	M:'$aleph_feature'(feature,feature(Id,_,_,Template,Body)),
 	Feature = (Template:-Body).
 
 gen_feature(Feature,Label,Class,M):-
@@ -9968,7 +9969,7 @@ gen_feature(Feature,Label,Class,M):-
 
 /**
  * show(+V:atomic) is det
- * 
+ *
  * Different values of V result in showing the following.
  * - bottom Current bottom clause.
  * - constraints Constraints found by induce_constraints.
@@ -10178,7 +10179,7 @@ settings(M):-
 /**
  * good_clauses(:GoodClauses:list) is det
  *
- * Good clauses found in searches conducted so far (good clauses all have a utility 
+ * Good clauses found in searches conducted so far (good clauses all have a utility
  * above that specified by minscore).
  */
 good_clauses(M:GC):-
@@ -10210,7 +10211,7 @@ bottom(M:Clause):-
 	bottom(Clause,M).
 
 bottom(Clause,M):-
-	M:'$aleph_sat'(lastlit,Last), 
+	M:'$aleph_sat'(lastlit,Last),
 	get_clause(1,Last,[],ClauseList,M),
 	list_to_clause(ClauseList,Clause).
 
@@ -10263,26 +10264,26 @@ best_hypothesis(Head1,Body1,[P,N,L],M):-
 
 /**
  * hypothesis(:Head:term,-Body:term,-Label:list) is det
- * 
- * Head is the head of the current hypothesised clause. 
- * Body is the body of the current hypothesised clause. 
- * Label is the list [P,N,L] where P is the positive examples covered by the 
- * hypothesised clause, N is the negative examples covered by the 
- * hypothesised clause, and L is the number of literals in the 
+ *
+ * Head is the head of the current hypothesised clause.
+ * Body is the body of the current hypothesised clause.
+ * Label is the list [P,N,L] where P is the positive examples covered by the
+ * hypothesised clause, N is the negative examples covered by the
+ * hypothesised clause, and L is the number of literals in the
  * hypothesised clause.
- * 
+ *
  */
 hypothesis(M:Head1,Body1,Label):-
 	hypothesis(Head1,Body1,Label,M).
 
 /**
  * hypothesis(-Head:term,-Body:term,-Label:list,+Module:atomic) is det
- * 
- * Head is the head of the current hypothesised clause. 
- * Body is the body of the current hypothesised clause. 
- * Label is the list [P,N,L] where P is the positive examples covered by the 
- * hypothesised clause, N is the negative examples covered by the 
- * hypothesised clause, and L is the number of literals in the 
+ *
+ * Head is the head of the current hypothesised clause.
+ * Body is the body of the current hypothesised clause.
+ * Label is the list [P,N,L] where P is the positive examples covered by the
+ * hypothesised clause, N is the negative examples covered by the
+ * hypothesised clause, and L is the number of literals in the
  * hypothesised clause. Module is the module of the input file.
  * Internal predicates.
  */
@@ -10294,16 +10295,16 @@ hypothesis(Head1,Body1,Label,M):-
         M:'$aleph_global'(hypothesis,hypothesis(_,Theory,_,_)),
 	(Theory = [_|_] -> aleph_member(Clause,Theory);
 		Theory = Clause),
-	split_clause(Clause,Head2,Body2), 
+	split_clause(Clause,Head2,Body2),
 	Head1 = Head2, Body1 = Body2,
 	get_hyp_label((Head2:-Body2),Label,M).
 
 /**
  * rdhyp(:V:var) is det
- * 
+ *
  * Read a hypothesised clause from the user.
  * Internal predicate, to be called as `rdhyp/0`.
- * 
+ *
  */
 rdhyp(M:_):-
 	retractall(M:'$aleph_search'(pclause,_)),
@@ -10317,11 +10318,11 @@ rdhyp(M:_):-
 
 /**
  * addhyp_i(:V:var) is det
- * 
- * Add current hypothesised clause to theory. 
+ *
+ * Add current hypothesised clause to theory.
  * If a search is interrupted, then the current best hypothesis will be added to the theory.
  * Internal predicate, to be called as `addhyp/0`.
- * 
+ *
  */
 addhyp_i(M:_):-
 	addhyp(M).
@@ -10331,7 +10332,7 @@ addhyp(M):-
 	Theory = [_|_], !,
 	add_theory(Label,Theory,PCover,NCover,M).
 addhyp(M):-
-        M:'$aleph_global'(hypothesis,hypothesis(Label,_,PCover,_)), !,   
+        M:'$aleph_global'(hypothesis,hypothesis(Label,_,PCover,_)), !,
         rm_seeds(M),
         worse_coversets(PCover,pos,Label,Worse,M),
         (Worse = [] -> true;
@@ -10362,13 +10363,13 @@ add_bottom(Bottom,M):-
 		complete_label(Evalfn,Example,[1,0,1],Label1),
 		asserta(M:'$aleph_global'(hypothesis,hypothesis(Label1,(Example:-true),[Num-Num],[])))).
 
-	
+
 % specialise a hypothesis by recursive construction of
 % abnormality predicates
 
 /**
  * sphyp_i(:V:var) is det
- * 
+ *
  * Specialise a hypothesis by recursive construction of
  * abnormality predicates.
  * Internal predicate, to be called as `sphyp/0`.
@@ -10391,25 +10392,25 @@ sphyp(M):-
 
 /**
  * addgcws_i(:V:var) is det
- * 
+ *
  * Add hypothesis constructed by performing GCWS to theory.
  * Internal predicate, to be called as `addgcws/0`.
- * 
+ *
  */
 addgcws_i(M:_):-
 	addgcws(M).
 
 addgcws(M):-
-        retract(M:'$aleph_search'(gcwshyp,hypothesis(Label,C,P,N))), !,   
+        retract(M:'$aleph_search'(gcwshyp,hypothesis(Label,C,P,N))), !,
 	asserta(M:'$aleph_search'(gcwshyp,hypothesis(Label,C,P,N))),
 	addhyp(M),
 	add_gcws(M).
 /**
  * rmhyp_i(:V:var) is det
- * 
+ *
  * Remove the current hypothesised clause from theory
  * Internal predicate, to be called as `rmhyp/0`.
- * 
+ *
  */
 rmhyp_i(M:_):-
 	rmhyp(M).
@@ -10427,7 +10428,7 @@ rmhyp(_).
  * covers(-P:int) is det
  *
  * Show positive examples covered by hypothesised clause.
- * 
+ *
  */
 covers(M:PC):-
         get_hyp(Hypothesis,M),
@@ -10444,7 +10445,7 @@ covers(M:PC):-
  * coversn(-N:int) is det
  *
  * Show negative examples covered by hypothesised clause.
- * 
+ *
  */
 coversn(M:NC):-
         get_hyp(Hypothesis,M),
@@ -10462,7 +10463,7 @@ coversn(M:NC):-
 % 	within a greedy search
 covers(P,M):-
 	get_hyp(Hypothesis,M),
-	(setting(greedy,true,M) -> 
+	(setting(greedy,true,M) ->
 		M:'$aleph_global'(atoms,atoms_left(pos,Pos));
 		M:'$aleph_global'(atoms,atoms(pos,Pos))),
 	label_create(Hypothesis,pos,Pos,Label,M),
@@ -10489,7 +10490,7 @@ coversn(N,M):-
 % 	as in covers/1, but returns list of examples covered and their count
 covers(PList,P,M):-
 	get_hyp(Hypothesis,M),
-	(setting(greedy,true,M) -> 
+	(setting(greedy,true,M) ->
 		M:'$aleph_global'(atoms,atoms_left(pos,Pos));
 		M:'$aleph_global'(atoms,atoms(pos,Pos))),
 	label_create(Hypothesis,pos,Pos,Label,M),
@@ -10517,7 +10518,7 @@ coversn(NList,N,M):-
  * example_saturated(:Ex:term) is det
  *
  * Ex is a positive example. This is the current example saturated.
- * 
+ *
  */
 example_saturated(M:Example):-
 	example_saturated(Example,M).
@@ -10679,7 +10680,7 @@ random(X,Distr):-
 random(X,Distr):-
 	Distr = [_|_],
 	nonvar(X), !,
-        aleph_member(Prob-X,Distr), 
+        aleph_member(Prob-X,Distr),
 	Prob > 0.0.
 
 mean(L,M):-
@@ -10705,7 +10706,7 @@ sumsq([X|T],S):-
 	S is X*X + S1.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 % auxilliary definitions  for some of the above
 
 set_default(A,M):-
@@ -10721,7 +10722,7 @@ default_setting(A,B):-
 % special case for threads as only SWI supports it
 check_setting(threads,B):-
 	set_def(threads,_,_,Dom,_,_),
-	check_legal(Dom,B), 
+	check_legal(Dom,B),
 	prolog_type(P),
 	(B > 1 ->
 		(P = swi -> true;
@@ -11141,29 +11142,29 @@ special_consideration(portray_literals,true,M):-
 
 special_consideration(record,true,M):-
 	noset(recordfile_stream,M),
-	(setting(recordfile,F,M) -> 
+	(setting(recordfile,F,M) ->
 		aleph_open(F,append,Stream),
 		set(recordfile_stream,Stream,M);
 		true), !.
 special_consideration(record,false,M):-
 	noset(recordfile_stream,M), !.
 special_consideration(recordfile,File,M):-
-	noset(recordfile_stream,M), 
-	(setting(record,true,M) -> 
+	noset(recordfile_stream,M),
+	(setting(record,true,M) ->
 		aleph_open(File,append,Stream),
 		set(recordfile_stream,Stream,M);
 		true), !.
 special_consideration(good,true,M):-
 	noset(goodfile_stream,M),
-	(setting(goodfile,F,M) -> 
+	(setting(goodfile,F,M) ->
 		aleph_open(F,append,Stream),
 		set(goodfile_stream,Stream,M);
 		true), !.
 special_consideration(good,false,M):-
 	noset(goodfile_stream,M), !.
 special_consideration(goodfile,File,M):-
-	noset(goodfile_stream,M), 
-	(setting(good,true,M) -> 
+	noset(goodfile_stream,M),
+	(setting(good,true,M) ->
 		aleph_open(File,append,Stream),
 		set(goodfile_stream,Stream,M);
 		true), !.
@@ -11246,7 +11247,7 @@ get_hyp_label((_:-Body),[P,N,L],M):-
         (M:'$aleph_search'(coversn,coverns(_,N))-> true;
                         coversn(_,M),
                         M:'$aleph_search'(coversn,coversn(_,N))).
- 
+
 
 show_global(Key,Pred,M):-
         M:'$aleph_global'(Key,Pred),
@@ -11257,7 +11258,7 @@ show_global(_,_,_M).
 
 aleph_portray(hypothesis,true,M):-
 	M:aleph_portray(hypothesis), !.
-aleph_portray(hypothesis,false,M):- 
+aleph_portray(hypothesis,false,M):-
 	p_message('hypothesis'),
 	hypothesis(Head,Body,_,M),
 	pp_dclause((Head:-Body),M), !.
@@ -11304,7 +11305,7 @@ aleph_writeq(Lit):-
 	write_term(Lit,[numbervars(true),quoted(true)]).
 
 show_file(File):-
-	aleph_open(File,read,Stream), 
+	aleph_open(File,read,Stream),
 	repeat,
 	read(Stream,Clause),
 	(Clause = end_of_file -> close(Stream), !
@@ -11334,7 +11335,7 @@ write_profile_data([]).
         % just swap the two calls to get most often called predicates first.
         format('~w: ~w~n', [P,D]),
         write_profile_data(SLP).
- 
+
 
 
 

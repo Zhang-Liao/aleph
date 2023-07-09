@@ -1,18 +1,3 @@
-:- use_module(library(aleph)).
-:- if(current_predicate(use_rendering/1)).
-:- use_rendering(prolog).
-:- endif.
-:- aleph.
-:- modeh(*,grandparent(+person,-person)).
-
-:- modeb(*,mother(+person,-person)).
-:- modeb(*,father(+person,-person)).
-
-:- determination(grandparent/2,father/2).
-:- determination(grandparent/2,parent/2).
-:- determination(grandparent/2,mother/2).
-
-:-dynamic grandparent/2.
 :-begin_bg.
 person(bob).
 person(dad(bob)).
@@ -50,5 +35,4 @@ father(dad(X),X):-
    person(X).
 mother(mum(X),X):-
    person(X).
-
 :-end_bg.
