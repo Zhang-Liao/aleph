@@ -63,6 +63,9 @@ father(dad(X),X):-
 mother(mum(X),X):-
    person(X).
 
+syn_member(X, [Y | _]) :- X == Y.
+syn_member(X, [_ | Tl]) :- syn_member(X, Tl).
+
 input_vars_aux([], []).
 
 input_vars_aux([H|Tl], Vars) :-
@@ -124,25 +127,15 @@ refine(grandparent(X, Y) :- Body1, Clause):-
     output_vars(Atoms, BodyOutputVars),
     member(Input, [X|BodyOutputVars]),
     % print(bodyOutputVars(BodyOutputVars)), nl,
-    member(Output, [Y,Z]),
+    member(Output, [Y,_Z]),
     body_pred(P),
     NewAtom =.. [P, Input, Output],
-    % print(P), nl,
+    not(syn_member(NewAtom, Atoms)),
+    % print(not(member(NewAtom, Atoms))), nl, nl,
     comma_list(Body2, [NewAtom| Atoms]),
     Clause = (grandparent(X, Y):- Body2).
     % print('add mother'), nl,
     % print(Clause), nl, nl.
-
-% refine(grandparent(X, Y) :- Body1, Clause):-
-    % print('father'), nl,
-    % comma_list(Body1, Atoms),
-    % output_vars(Atoms, BodyOutputVars),
-    % input_vars(Atoms, BodyInputVars),
-    % member(Input, [X|BodyOutputVars]),
-    % member(Output, [Y,Z]),
-    % P =.. [father, Input, Output],
-    % comma_list(Body2, [P| Atoms]),
-    % Clause = (grandparent(X, Y):- Body2).
 
 :-end_bg.
 :-begin_in_pos.
