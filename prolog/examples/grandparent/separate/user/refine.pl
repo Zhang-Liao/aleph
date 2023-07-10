@@ -56,33 +56,17 @@ output_vars(List, Vars):-
     output_vars_aux(List, VarsDup),
     term_variables(VarsDup, Vars).
 
-body_pred(mother).
-body_pred(father).
-
-
 refine(aleph_false, (grandparent(_, _) :- true)).
-    % print('grandparent'), nl.
-
-% refine(grandparent(X, Y), (mother())) :-
-%     print('grandparent'), nl.
 
 refine(grandparent(X, Y) :- Body1, Clause):-
-    % print('mother'), nl,
     comma_list(Body1, Atoms),
-    % print(atoms(Atoms)), nl,
-    % input_vars(Atoms, BodyInputVars),
-    % print(bodyInputVars(BodyInputVars)), nl,
     output_vars(Atoms, BodyOutputVars),
     member(Input, [X|BodyOutputVars]),
-    % print(bodyOutputVars(BodyOutputVars)), nl,
     member(Output, [Y,_Z]),
     body_pred(P),
     NewAtom =.. [P, Input, Output],
     not(syn_member(NewAtom, Atoms)),
-    % print(not(member(NewAtom, Atoms))), nl, nl,
     comma_list(Body2, [NewAtom| Atoms]),
     Clause = (grandparent(X, Y):- Body2).
-    % print('add mother'), nl,
-    % print(Clause), nl, nl.
 
 :-end_bg.

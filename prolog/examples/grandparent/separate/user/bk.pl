@@ -1,3 +1,6 @@
+body_pred(mother).
+body_pred(father).
+
 :-begin_bg.
 person(bob).
 person(dad(bob)).
