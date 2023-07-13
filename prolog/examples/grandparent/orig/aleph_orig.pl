@@ -2102,7 +2102,6 @@ complete_label(user,Clause,[P,N,L],[P,N,L,Val]):-
         cost(Clause,[P,N,L],Cost), !,
 	Val is -Cost.
 complete_label(entropy,_,[P,N,L],[P,N,L,Val]):-
-	p_message([P,N,L]),
 	evalfn(entropy,[P,N,L],Entropy),
 	Val is -Entropy, !.
 complete_label(gini,_,[P,N,L],[P,N,L,Val]):-
@@ -8772,7 +8771,7 @@ evalfn(wracc,[P,N|_],Val):-
 		Val is -0.25), !.
 evalfn(entropy,[P,N|_],Val):-
 	(P = -inf ->  Val is 1.0;
-		(((P is 0); (N is 0)) -> Val is 0.0;
+		((P is 0; N is 0) -> Val is 0.0;
 			Total is P + N,
 			P1 is P/Total,
 			Q1 is 1-P1,
@@ -8784,9 +8783,12 @@ evalfn(gini,[P,N|_],Val):-
 		Total is P + N,
 		P1 is P/Total,
 		Val is 2*P1*(1-P1)), !.
+
 evalfn(accuracy,[P,N|_],Val):-
-	(P = -inf -> Val is 0.5;
-		Val is P / (P + N)), !.
+    (P = -inf -> Val is 0.5;
+        (P is 0, N is 0 -> Val is 0;
+        (Val is P / (P + N)))), !.
+
 % the evaluation functions below are due to James Cussens
 evalfn(pbayes,[P,N|_],Val):-
         (P = -inf -> Val is 0.5;
