@@ -1662,6 +1662,7 @@ get_gain1(S,Flag,C,CL,EMin/EL,Last,Best/Node,Path,L1,Pos,Neg,OVars,E,Best1):-
 		PCvr = [],
 		Label = [_,_,CL],
 		ccheck(S,(Head1:-Body1),NCvr,Label);
+		% p_message('Try to prove examples if optimization does not work'),
         prove_examples(S,Flag,Contradiction,Entry,Best,CL,EL, (Head1:-Body1),Pos,Neg,PCvr,NCvr,Label)
 	),
     arg(4,S,SearchStrat/Evalfn),
