@@ -1208,8 +1208,11 @@ get_search_settings(S):-
 %	. best hypothesis has accuracy 1.0 if evalfn=accuracy
 %	. best hypothesis covers all positive examples
 
-% 0 Negs, and not the first clause which is merely the example.
-discontinue_search(S, [_,0, _,_|_]/Id, _) :- Id > 0.
+% Negs < Noise, and the best is not the example.
+discontinue_search(_, [_,N, _,_|_]/Id, _) :-
+    setting(noise,Noise),
+    N < Noise,
+    Id > 0.
 
 discontinue_search(S,[P,_,_,F|_]/_,_):-
     arg(39,S,RlsType),
@@ -1709,10 +1712,10 @@ get_gain1(S,Flag,C,CL,EMin/EL,Last,Best/Node,Path,L1,Pos,Neg,OVars,E,Best1):-
     (VSearch = true ->
         asserta('$aleph_search'(label,label(Node1,Label)));
         true),
-        (((RefineOp \= false,Contradiction=false);
-        (arg(28,S,HOVars),clause_ok(Contradiction,HOVars,OVars2))) ->
-                update_best(S,C,PCvr,NCvr,Best/Node,Label1/Node1,Best1);
-                Best1=Best/Node),
+    (((RefineOp \= false,Contradiction=false);
+    (arg(28,S,HOVars),clause_ok(Contradiction,HOVars,OVars2))) ->
+        update_best(S,C,PCvr,NCvr,Best/Node,Label1/Node1,Best1);
+        Best1=Best/Node),
     !.
 get_gain1(_,_,_,_,_,_,Best,_,_,_,_,_,_,Best).
 
@@ -2623,7 +2626,6 @@ prove_cache(exact,S,Type,Entry,Clause,Intervals,Max,IList,Count):-
         arg(8,S,Caching),
         (Caching = true -> add_cache(Entry,Type,IList); true).
 prove_cache(upper,S,Type,Entry,Clause,Intervals,Max,IList,Count):-
-    p_message('prove_cache5'),
     arg(8,S,Caching),
     Caching = true, !,
     (check_cache(Entry,Type,Cached)->
@@ -2637,7 +2639,6 @@ prove_cache(upper,S,Type,Entry,Clause,Intervals,Max,IList,Count):-
                     add_cache(Entry,Type,IList),
                     fail)).
 prove_cache(upper,S,Type,_,Clause,Intervals,Max,IList/Left1,Count):-
-    p_message('prove_cache6'),
     arg(8,S,Caching),
     arg(12,S,LNegs),
     arg(14,S,Depth),
@@ -2645,9 +2646,7 @@ prove_cache(upper,S,Type,_,Clause,Intervals,Max,IList/Left1,Count):-
     arg(34,S,Proof),
 (Intervals = Exact/Left ->
     aleph_append(Left,Exact,IList1),
-    p_message('before prove1'),
-    prove(LNegs/Caching,Depth/Time/Proof,Type,Clause,IList1,Max,IList,Count),
-    p_message('after prove1');
+    prove(LNegs/Caching,Depth/Time/Proof,Type,Clause,IList1,Max,IList,Count);
     (p_message('before prove2'),
     prove(LNegs/Caching,Depth/Time/Proof,Type,Clause,Intervals,Max,IList,Count),
     p_message('after prove2'))),
