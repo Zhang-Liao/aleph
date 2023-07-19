@@ -2174,7 +2174,7 @@ prove_neg(S,Flag,Entry,[P,N|_],[P,L1],Clause,Neg,NCover,NCount):-
     arg(4,S,bf/coverage),
     !,
     arg(7,S,ClauseLength),
-    (ClauseLength = L1 ->
+    ((ClauseLength = L1, p_message('reach the clause length limitation')) ->
         arg(2,S,Explore),
         (Explore = true -> MaxNegs is N; MaxNegs is N - 1),
         MaxNegs >= 0,
@@ -2184,12 +2184,12 @@ prove_neg(S,Flag,Entry,[P,N|_],[P,L1],Clause,Neg,NCover,NCount):-
         !.
 prove_neg(S,Flag,Entry,_,[P1,L1],Clause,Neg,NCover,NCount):-
     arg(7,S,ClauseLength),
-    ClauseLength = L1,  !,
+    ClauseLength = L1,
+    p_message('reach the clause length limitation'),
+    !,
     arg(17,S,Noise), arg(18,S,MinAcc),
     get_max_negs(Noise/MinAcc,P1,N1),
-    p_message('before prove_cache'),
     prove_cache(Flag,S,neg,Entry,Clause,Neg,N1,NCover,NCount),
-    p_message('after prove_cache'),
     NCount =< N1,
     !.
 
@@ -2541,7 +2541,6 @@ potentially_good([_,N|_],[_,N1|_]):-
 % ideas in caching developed in discussions with James Cussens
 
 prove_cache(exact,S,Type,Entry,Clause,Intervals,IList,Count):-
-    p_message('prove_cache1'),
     !,
     (Intervals = Exact/Left ->
             arg(14,S,Depth),
@@ -2607,7 +2606,6 @@ prove_cached(S,Type,Entry,I1,_,Intervals,IList,Count):-
 
 % prove at most Max atoms
 prove_cache(exact,S,Type,Entry,Clause,Intervals,Max,IList,Count):-
-    p_message('prove_cache4'),
     !,
     (Intervals = Exact/Left ->
         interval_count(Exact,Count0),
@@ -2625,6 +2623,7 @@ prove_cache(exact,S,Type,Entry,Clause,Intervals,Max,IList,Count):-
         interval_count(Intervals,Count)),
         arg(8,S,Caching),
         (Caching = true -> add_cache(Entry,Type,IList); true).
+
 prove_cache(upper,S,Type,Entry,Clause,Intervals,Max,IList,Count):-
     arg(8,S,Caching),
     Caching = true, !,
@@ -2647,9 +2646,7 @@ prove_cache(upper,S,Type,_,Clause,Intervals,Max,IList/Left1,Count):-
 (Intervals = Exact/Left ->
     aleph_append(Left,Exact,IList1),
     prove(LNegs/Caching,Depth/Time/Proof,Type,Clause,IList1,Max,IList,Count);
-    (p_message('before prove2'),
-    prove(LNegs/Caching,Depth/Time/Proof,Type,Clause,Intervals,Max,IList,Count),
-    p_message('after prove2'))),
+    prove(LNegs/Caching,Depth/Time/Proof,Type,Clause,Intervals,Max,IList,Count)),
 find_lazy_left(S,Type,IList,Left1).
 
 prove_intervals(S,Type,Clause,I1/Left,Max,IList,Count):-
