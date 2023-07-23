@@ -1208,9 +1208,13 @@ get_search_settings(S):-
 %	. best hypothesis has accuracy 1.0 if evalfn=accuracy
 %	. best hypothesis covers all positive examples
 
+% Current best cannot prove any positive examples.
+% discontinue_search(_, [0, _, _,_|_]/_, _).
+
 % Negs < Noise, and the best is not the example.
 discontinue_search(_, [_,N, _,_|_]/Id, _) :-
-    setting(noise,Noise),
+    setting(discontinue_noise, Noise),
+    % p_message(setting(discontinue_noise, Noise)), halt,
     N < Noise,
     Id > 0.
 
