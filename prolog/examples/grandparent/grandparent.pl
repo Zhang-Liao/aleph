@@ -17,6 +17,7 @@ To run do 'induce'
 :- determination(grandparent/2,father/2).
 :- determination(grandparent/2,parent/2).
 :- determination(grandparent/2,mother/2).
+% :- aleph_set(search, heuristic).
 
 :-dynamic grandparent/2.
 :-begin_bg.

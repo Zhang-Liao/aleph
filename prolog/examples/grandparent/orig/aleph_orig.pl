@@ -4156,6 +4156,7 @@ find_clause(Search):-
 	show_stats(Evalfn,BestLabel),
 	update_search_stats(Nodes,Time),
 	record_search_stats(RClause,Nodes,Time),
+	(RClause = (_:-true) -> halt),
 	noset(stage),
 	!.
 find_clause(_):-
