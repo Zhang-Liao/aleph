@@ -6,8 +6,8 @@
 :- endif.
 
 :- modeh(*,gp(+person,-person)).
-:- modeb(*,mom(+person,-person)).
-:- modeb(*,dad(+person,-person)).
+:- modeb(2,mom(+person,-person)).
+:- modeb(2,dad(+person,-person)).
 
 :- determination(gp/2, dad/2).
 :- determination(gp/2, mom/2).
@@ -34,5 +34,10 @@ gp(b,c).
 gp(c,f).
 gp(d,f).
 :-end_in_neg.
+
+:- aleph_set(evalfn,user).
+cost(_Clause,[P,N,L],Cost):-
+   L = 1 -> Cost = inf;
+   (Cost = N - P).
 
 % :- induce.
